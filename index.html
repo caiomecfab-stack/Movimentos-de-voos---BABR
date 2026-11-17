@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16314c">
+<link rel="manifest" href="manifest.json"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-title" content="Voos BABR"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>Movimentos de Voos BABR</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+:root{--bg:#16314c;--bg2:#1c3b59;--sf:#244a6d;--bd:#3d688f;--tx:#eef5fb;--mu:#a8c0d6;--am:#ffc83d;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--bg)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100%;background:linear-gradient(160deg,#15304b,#1d3f5f 60%,#1a384f);color:var(--tx);font:15px/1.4 Barlow,"Segoe UI",system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 16px 8px}
+h1{margin:0;font:700 36px/1 "Barlow Condensed","Arial Narrow",sans-serif;flex:1 1 220px}
+h1 small{display:block;font:500 13px Barlow,system-ui,sans-serif;color:var(--mu);margin-top:5px}
+.clk{display:flex;gap:8px}.clk div{background:#0d1d2e;border-radius:8px;padding:4px 10px 7px}
+.clk small{display:block;font:600 11px Barlow,system-ui,sans-serif;color:var(--mu);margin-bottom:2px}.clk .fls{font-size:22px}
+.btn,.chip,.seg button{border:1px solid var(--bd);background:rgba(255,255,255,.07);color:var(--tx);border-radius:10px;padding:8px 14px;min-height:42px;cursor:pointer;font:600 14px Barlow,system-ui,sans-serif;white-space:nowrap}
+.btn.p{background:var(--am);border-color:var(--am);color:#1a1300}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,.cd:focus-visible,.br:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+.bar{display:flex;gap:8px;padding:4px 16px;overflow-x:auto;align-items:center;scrollbar-width:none}
+.bar::-webkit-scrollbar{display:none}
+.chip.on{background:var(--c,var(--am));border-color:var(--c,var(--am));color:#06121f}
+.chip i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:7px}
+.chip.on i{background:#06121f}
+.seg{display:flex}.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:10px 0 0 10px;margin:0}.seg button:last-child{border-radius:0 10px 10px 0}
+.seg button.on{background:var(--am);border-color:var(--am);color:#1a1300}
+input,select{border:1px solid var(--bd);background:#0f2539;color:var(--tx);border-radius:10px;padding:8px 12px;min-height:42px;font:500 14px Barlow,system-ui,sans-serif}
+input[type=search]{min-width:170px;flex:1}
+.info{padding:6px 16px;color:var(--mu);font-size:13px}
+.fls{display:inline-flex;gap:2px;vertical-align:middle}
+.fl{display:inline-block;min-width:.7em;text-align:center;padding:0 4px;background:linear-gradient(#1a2e43 50%,#0b1723 50%);color:var(--am);border-radius:3px;font:700 1em/1.2 "Barlow Condensed","Arial Narrow",sans-serif;position:relative;animation:fp .45s ease-out both;animation-delay:calc(var(--k)*30ms)}
+.fl:after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.75)}
+.co{color:var(--am);font-weight:700;padding:0 1px}
+@keyframes fp{from{transform:rotateX(-90deg)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.fl{animation:none}}
+.board{margin:6px 16px;background:#0d1d2e;border:1px solid var(--bd);border-radius:12px;padding:6px 8px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.bh{display:flex;align-items:center;gap:8px}.bh .hint{color:var(--mu);font-size:12px;flex:1;min-width:0}.board .seg button{min-height:34px;padding:4px 12px;font-size:13px}
+.seg .ic{width:30px;height:12px;vertical-align:-1px;margin-right:6px;--wc:#0d1d2e}
+.br{display:grid;grid-template-columns:auto auto 1fr auto;gap:2px 12px;align-items:center;width:100%;text-align:left;background:#14293f;border:0;border-left:5px solid var(--c);border-radius:8px;padding:4px 10px;margin-top:4px;color:var(--tx);cursor:pointer;font:inherit}
+.br .fls{font-size:20px}.bi{min-width:0}.bi b{font-size:14px}.bi small{font-size:12px}
+.bi b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bi small{color:var(--mu)}
+.bs{color:var(--am);font-weight:600;font-size:12px;text-align:right}
+@media (max-width:640px){.br{grid-template-columns:auto 1fr auto}.br .dst{justify-self:start}.bs{grid-column:3;grid-row:1}.bi{grid-column:1/-1;grid-row:2}.bh .hint{display:none}h1{font-size:30px}}
+.tl{height:calc(max(470px,58vh)*var(--z,1));overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;background:rgba(10,24,38,.28);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.rail{display:flex;align-items:stretch;height:max(470px,58vh);zoom:var(--z,1);width:max-content;padding:0 30px;background:repeating-linear-gradient(90deg,#cfe0ee 0 18px,transparent 18px 38px) 0 50%/100% 2px no-repeat,linear-gradient(#0e2133,#0e2133) 0 50%/100% 12px no-repeat}
+.nd{position:relative;width:196px;flex:none}
+.mk{position:absolute;left:50%;top:50%;width:96px;height:56px;margin:-28px 0 0 -48px;border-radius:14px;background:var(--c);border:3px solid #16314c;z-index:2;box-shadow:0 4px 12px rgba(0,0,0,.45);color:#fff}
+.mk svg{display:block;width:100%;height:100%}
+.st{position:absolute;left:50%;width:4px;margin-left:-2px;height:36px;background:var(--c)}
+.up .st{bottom:50%}.dn .st{top:50%}
+.cd{position:absolute;left:4px;right:4px;background:var(--sf);border:1px solid var(--bd);border-top:5px solid var(--c);border-radius:6px 6px 14px 14px;padding:0;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.38);cursor:pointer;text-align:left;color:inherit;font:inherit}
+.up .cd{bottom:calc(50% + 34px)}.dn .cd{top:calc(50% + 34px)}
+.nd.now .cd{box-shadow:0 0 0 3px var(--am),0 6px 16px rgba(0,0,0,.38)}
+.ch{display:flex;align-items:center;gap:8px;padding:6px 10px;background:#0d1d2e;border-bottom:2px dashed var(--bd)}
+.ch .fls{font-size:28px}
+.ot{color:var(--mu);font:600 12px Barlow,system-ui,sans-serif}
+.nx{margin-left:auto;background:var(--am);color:#1a1300;font:700 11px Barlow,system-ui,sans-serif;padding:2px 6px;border-radius:5px}
+.cb{padding:7px 10px 9px}
+.ty{font:700 13px "Barlow Condensed","Arial Narrow",sans-serif;color:var(--c);letter-spacing:.08em;text-transform:uppercase}
+.rt{font:700 27px/1.1 "Barlow Condensed","Arial Narrow",sans-serif}.rt u{text-decoration:none;color:var(--c);padding:0 3px}
+.ms{font-size:13px;color:var(--mu);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.tg{display:inline-block;font-size:12px;font-weight:600;border-radius:5px;padding:1px 7px;background:var(--c);color:#06121f;margin:3px 4px 0 0}
+.tg.g{background:rgba(255,255,255,.15);color:var(--tx)}
+.dd{width:92px;flex:none;position:relative}
+.dd:before{content:"";position:absolute;left:50%;top:5%;bottom:5%;border-left:2px dashed var(--bd)}
+.dd span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--am);color:#1a1300;font:700 17px "Barlow Condensed","Arial Narrow",sans-serif;padding:4px 10px;border-radius:8px;white-space:nowrap;z-index:3}
+.empty{margin:auto;padding:30px;text-align:center;color:var(--mu);max-width:340px}
+dialog{border:0;border-radius:16px;padding:0;width:calc(100% - 24px);max-width:560px;max-height:88%;background:var(--sf);color:var(--tx);box-shadow:0 10px 40px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(5,12,20,.65)}
+.dh{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;gap:10px;align-items:center}
+.dh h2{margin:0;font:700 24px "Barlow Condensed","Arial Narrow",sans-serif;flex:1}
+.db{padding:12px 16px 16px;display:grid;gap:10px}
+.db h3{margin:0;font-size:13px;color:var(--mu);font-weight:600}
+.row2{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{border:1px solid var(--bd);border-radius:8px;padding:3px 9px;font-weight:600}
+.pill.hl{background:var(--c);border-color:var(--c);color:#06121f}
+.it{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;font-size:14px}
+.it .h{font-weight:700;color:var(--c)}
+textarea{width:100%;border:1px solid var(--bd);background:#0f2539;color:var(--tx);border-radius:10px;padding:8px;font:12px monospace}
+.fm{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fm label{display:grid;gap:3px;font-size:13px;color:var(--mu)}.fm input,.fm select{width:100%}
+.pv{overflow:auto;max-height:190px;border:1px solid var(--bd);border-radius:8px}.pv table{border-collapse:collapse;font-size:12px}.pv td{border:1px solid var(--bd);padding:2px 6px;white-space:nowrap}
+dialog{overflow:auto}.wr{color:var(--am);min-height:1.2em}
+@media (max-width:520px){.fm{grid-template-columns:1fr}}
+.zmb{display:flex;align-items:center;gap:10px;padding:0 16px;flex-wrap:wrap}.zmb .info{flex:1 1 220px;padding:6px 0}
+.zm{display:flex;align-items:center;gap:6px}.zm button{width:46px;height:46px;border-radius:10px;border:1px solid var(--bd);background:rgba(255,255,255,.07);color:var(--tx);font:700 24px/1 Barlow,sans-serif;cursor:pointer}.zm span{min-width:48px;text-align:center;font-weight:600}
+.lgi{border-left:4px solid var(--am);padding:5px 10px;background:rgba(255,255,255,.06);border-radius:6px;font-size:14px}.lgi .ac{color:var(--am);font-weight:700}
+@media (max-width:700px){#bnew:not([hidden]){position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;min-height:54px;padding:0 20px;border-radius:999px;background:var(--am);border-color:var(--am);color:#1a1300;font-size:16px;box-shadow:0 6px 18px rgba(0,0,0,.5)}}
+.bt{margin-left:auto;border:1px solid var(--bd);background:rgba(255,255,255,.07);color:var(--tx);border-radius:10px;padding:4px 12px;min-height:34px;cursor:pointer;font:600 13px Barlow,system-ui,sans-serif;white-space:nowrap}
+.board.min{padding:4px 8px}.board.min .bt{margin:0;width:100%;text-align:left;min-height:38px;color:var(--mu)}
+.bt:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+.ts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--am);color:#1a1300;font:600 14px Barlow,system-ui,sans-serif;padding:10px 16px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.5);max-width:calc(100% - 32px)}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><g id="jet" fill="currentColor"><path d="M4 12C4 10 8 9 14 9H46C54 9 60 11 62 12.5C60 14 54 15.5 46 15.5H14C8 15.5 4 14 4 12Z"/><path d="M6 10.5 3 2H9L17 9.5Z"/><path d="M25 14H41L31 22.5H24Z" opacity=".85"/><ellipse cx="33" cy="19" rx="4" ry="1.7"/><path d="M17 11.8H45" style="stroke:var(--wc,var(--c));stroke-width:1.6;stroke-dasharray:2 2.2;fill:none"/></g></defs></svg>
+<header>
+<h1>Movimentos de voos - BABR<small id="src">Dados de exemplo</small></h1>
+<div class="clk"><div><small>Brasília</small><span id="cl"></span></div><div><small>Zulu (Z)</small><span id="cz"></span></div></div>
+<button class="btn" id="bnew" hidden>+ Novo voo</button><label class="btn p" for="file" id="lfile" tabindex="0" hidden>Importar planilha</label>
+<input id="file" type="file" accept=".xlsx,.xls,.csv" hidden>
+<button class="btn" id="now">Próximo voo</button><button class="btn" id="brole">Acesso: Usuário ▾</button><button class="btn" id="bhist" hidden>Histórico</button>
+</header>
+<div class="bar" id="sqs" aria-label="Esquadrão"></div>
+<div class="bar">
+<div class="seg" id="tys"><button data-ty="ALL" class="on">Tudo</button><button data-ty="DEP">Decolagens</button><button data-ty="ARR">Pousos</button></div>
+<div class="seg" id="zs"><button data-z="0" class="on">Hora local</button><button data-z="1">Hora Z</button></div>
+<select id="day" aria-label="Dia"></select>
+<input id="mo" type="month" aria-label="Mês dos voos" hidden>
+<input id="q" type="search" placeholder="Buscar aeronave, local ou missão">
+</div>
+<section class="board" id="board"></section>
+<div class="zmb"><div class="info" id="info"></div><div class="zm" aria-label="Zoom da linha do tempo"><button data-zm="-" aria-label="Diminuir zoom">−</button><span id="zv">100%</span><button data-zm="+" aria-label="Aumentar zoom">+</button></div></div>
+<main class="tl" id="tl"><div class="rail" id="rail"></div></main>
+<dialog id="dlg"></dialog><dialog id="d2"></dialog><dialog id="d3"></dialog><div id="ts" class="ts" role="status" hidden></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+const $=s=>document.querySelector(s),p2=n=>String(n).padStart(2,'0');
+const PAL=['#4cc3ff','#3ddc97','#ff8a5b','#d4e157','#ff6b8a','#2dd4bf'];
+const LEG=/^([A-Z0-9]{2,5})\s+(\d{1,2})$/,ETA=/^(?:([A-Z0-9]{2,5})\s+)?(\d{1,2})(?:\.0+)?$/;
+const WD=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'],OFF=-10800000;
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nsq=s=>{s=String(s).toUpperCase().trim();let a;if(/6\s*[°ºO]?\s*ETA/.test(s))return'6 ETA';if(/EXTERN/.test(s))return'EXTERNAS';if(/ESTRANG/.test(s))return'ESTRANGEIRAS';if(a=/^GTE\s*-?\s*(\d)/.exec(s))return'GTE '+a[1];return s},norm=nsq;
+const pt=v=>{if(typeof v==='number'&&v<1)return Math.round(v*1440)%1440;const m=/(\d{1,2})\s*[:hH.]?\s*(\d{2})/.exec(String(v));return m&&+m[1]<24?+m[1]*60+ +m[2]:null};
+
+
+function parse(rows,y,mo){
+const out=[];let sq='',fid=0;
+rows.forEach((r,i)=>{
+r=(r||[]).map(x=>x==null?'':x);const s=k=>String(r[k]).trim().toUpperCase();
+const lc=[3,4,5,6,7,8].map(k=>LEG.exec(s(k)));
+if(!lc.some(Boolean)){if(String(r[0]).trim()&&!String(r[1]).trim()&&!String(r[2]).trim())sq=norm(String(r[0]));return}
+const ac=String(r[0]).trim();if(!ac)return;
+const nx=rows[i+1]||[];let orgao='',paxr=null;
+[2,3].forEach(o=>{const q=rows[i+o]||[];if(/PAX/i.test(q[2]||''))paxr=q;if(/RG[ÃA]O/i.test(q[2]||''))orgao=String(q[3]||'').trim()});
+const legs=[];lc.forEach((m,k)=>{if(m)legs.push({c:m[1],d:+m[2],t:pt(nx[3+k]),x:paxr?String(paxr[3+k]||'').trim():''})});
+const route=s(2).split(/\s*-\s*/).filter(Boolean);
+let k0=-1;for(let a=0;a+legs.length<=route.length&&k0<0;a++)if(legs.every((l,j)=>route[a+j]===l.c))k0=a;
+const em=ETA.exec(s(9)),eLoc=(em&&em[1])||'BR',eT=pt(nx[9]);
+let m=mo,prev=0;
+const U=(d,t,c)=>{let mm=m;if(d<prev){mm=m+1;if(c)m=mm}if(c)prev=d;return Date.UTC(y,mm,d,0,t)};
+const base={ac,sq,fid:++fid,emb:String(r[1]).trim(),mission:String(r[10]).trim(),des:String(r[12]).trim(),orgao,route};
+const evs=[];
+legs.forEach((l,j)=>{if(l.t==null)return;evs.push({...base,ty:'DEP',from:l.c,to:(k0>=0&&route[k0+j+1])||(legs[j+1]&&legs[j+1].c)||eLoc,utc:U(l.d,l.t,true),pax:l.x})});
+if(em&&eT!=null){const u=U(+em[2],eT,false),pv=evs.filter(e=>e.utc<=u).pop();evs.push({...base,ty:'ARR',from:pv?pv.from:'',to:eLoc,utc:u,pax:''})}
+evs.sort((a,b)=>a.utc-b.utc);evs.forEach(e=>e.fl=evs);out.push(...evs)});
+return out.sort((a,b)=>a.utc-b.utc||(a.ty==='ARR'?-1:1))}
+
+let HID=false,rows=[],ev=[],sqs=[],srcName='Dados de exemplo',f={bt:'DEP',sq:'ALL',ty:'ALL',day:'ALL',q:'',z:false};
+const now0=new Date();$('#mo').value=now0.getFullYear()+'-'+p2(now0.getMonth()+1);
+try{const sv=JSON.parse(localStorage.getItem('tl_rows')||'null');if(sv&&sv.rows){rows=sv.rows;srcName=sv.name||'Planilha carregada'}}catch(e){}
+const col=sq=>PAL[Math.max(0,sqs.indexOf(sq))%PAL.length];
+const sh=()=>f.z?0:OFF;
+const dt=u=>new Date(u+sh()),hm=u=>{const d=dt(u);return p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+const hm2=u=>{const d=new Date(u+(f.z?OFF:0));return p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+const dk=u=>{const d=dt(u);return d.getUTCFullYear()+'-'+p2(d.getUTCMonth()+1)+'-'+p2(d.getUTCDate())};
+const dl=u=>{const d=dt(u);return WD[d.getUTCDay()]+' '+p2(d.getUTCDate())+'/'+p2(d.getUTCMonth()+1)};
+
+function load(){const [y,m]=$('#mo').value.split('-').map(Number);ev=hyd(mv).sort((a,b)=>a.utc-b.utc||(a.ty==='ARR'?-1:1));sqs=[...SQ,...new Set(ev.map(e=>e.sq).filter(x=>!SQ.includes(x)))];$('#src').textContent=srcName;if(f.sq!=='ALL'&&f.sq!=='GTE'&&!sqs.includes(f.sq))f.sq='ALL';render(true)}
+
+const fl=t=>[...String(t)].map((c,k)=>c===':'?'<i class="co">:</i>':`<span class="fl" style="--k:${k}">${esc(c)}</span>`).join('');
+const J=t=>`<use href="#jet" transform="${t}"/>`;
+const GR='<path d="M5 49H91" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="7 5"/>';
+const scene=ty=>ty==='DEP'?`<svg viewBox="0 0 96 56">${GR}<path d="M8 46C34 44 52 34 70 14" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-dasharray="2 4" fill="none"/>${J('translate(40 6) rotate(-26 20 7) scale(.62)')}</svg>`:`<svg viewBox="0 0 96 56">${GR}<path d="M6 8C34 12 56 26 74 44" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-dasharray="2 4" fill="none"/>${J('translate(32 16) rotate(22 20 7) scale(.62)')}</svg>`;
+const sqm=e=>f.sq==='ALL'||e.sq===f.sq||(f.sq==='GTE'&&e.sq.startsWith('GTE'));
+const hmx=u=>{const d=new Date(u);return p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+function tick(){const n=Date.now();$('#cl').innerHTML=fl(hmx(n+OFF));$('#cz').innerHTML=fl(hmx(n))}
+function board(){
+const bd=$('#board');bd.classList.toggle('min',HID);if(HID){bd.innerHTML='<button class="bt" data-bd="0">Mostrar quadro de partidas e chegadas ▾</button>';return}
+const q=f.q.toLowerCase(),t=f.bt,n=Date.now(),ic='<svg class="ic" viewBox="0 0 64 24" style="color:currentColor"><use href="#jet" transform="rotate(-24 32 12)"/></svg>';
+const l=ev.filter(e=>e.ty===t&&sqm(e)&&(!q||[e.ac,e.sq,e.from,e.to,e.mission,e.des].join(' ').toLowerCase().includes(q)));
+let u=l.filter(e=>e.utc>=n-1800000);if(!u.length)u=l.slice(-4);u=u.slice(0,4);
+const st=e=>{const m=Math.round((e.utc-n)/60000);return m<0?'Já ocorreu':m<60?'em '+m+' min':m<1440?'em '+Math.floor(m/60)+' h '+p2(m%60)+' min':'em '+Math.floor(m/1440)+' d'};
+$('#board').innerHTML=`<div class="bh"><div class="seg"><button data-bt="DEP" class="${t==='DEP'?'on':''}">${ic}Partidas</button><button data-bt="ARR" class="${t==='ARR'?'on':''}">${ic.replace('-24','24')}Chegadas</button></div><span class="hint">Próximos 4 movimentos · toque para ver o roteiro</span><button class="bt" data-bd="1">Ocultar quadro ▴</button></div>`+
+(u.length?u.map(e=>`<button class="br" data-i="${ev.indexOf(e)}" style="--c:${col(e.sq)}"><span class="fls">${fl(hm(e.utc))}</span><span class="fls dst">${fl(t==='DEP'?e.to:(e.from||'—'))}</span><span class="bi"><b>${esc(e.mission)||'Sem missão informada'}</b><small>${esc(e.sq)} · aeronave ${esc(e.ac)} · ${dl(e.utc)}</small></span><span class="bs">${st(e)}</span></button>`).join(''):'<div class="empty">Sem movimentos para mostrar.</div>')}
+function render(go){
+$('#sqs').innerHTML='<button class="chip'+(f.sq==='ALL'?' on':'')+'" data-sq="ALL">Todos os esquadrões</button><button class="chip'+(f.sq==='GTE'?' on':'')+'" style="--c:'+col('GTE 1')+'" data-sq="GTE"><i></i>Todos os GTE</button>'+sqs.map(s=>`<button class="chip${f.sq===s?' on':''}" style="--c:${col(s)}" data-sq="${esc(s)}"><i></i>${esc(s)}</button>`).join('');
+document.querySelectorAll('#tys button').forEach(b=>b.classList.toggle('on',b.dataset.ty===f.ty));
+document.querySelectorAll('#zs button').forEach(b=>b.classList.toggle('on',(b.dataset.z==='1')===f.z));
+const days=[...new Map(ev.map(e=>[dk(e.utc),dl(e.utc)]))];
+if(f.day!=='ALL'&&!days.some(d=>d[0]===f.day))f.day='ALL';
+$('#day').innerHTML='<option value="ALL">Todos os dias</option>'+days.map(d=>`<option value="${d[0]}"${f.day===d[0]?' selected':''}>${d[1]}</option>`).join('');
+const q=f.q.toLowerCase();board();
+const list=ev.filter(e=>sqm(e)&&(f.ty==='ALL'||e.ty===f.ty)&&(f.day==='ALL'||dk(e.utc)===f.day)&&(!q||[e.ac,e.sq,e.from,e.to,e.mission,e.des,e.emb].join(' ').toLowerCase().includes(q)));
+$('#info').textContent=list.length+' movimentos · '+new Set(list.map(e=>e.ac)).size+' aeronaves · horários em '+(f.z?'Zulu (Z)':'horário local de Brasília')+' · toque num cartão para ver o roteiro';
+if(!list.length){$('#rail').innerHTML='<div class="empty"><b>Nenhum voo encontrado</b><br>Mude os filtros ou carregue uma planilha com seções de esquadrão e horários.</div>';return}
+const nxt=list.findIndex(e=>e.utc>=Date.now());let last='',h='';
+list.forEach((e,i)=>{const k=dk(e.utc);if(k!==last){h+=`<div class="dd"><span>${dl(e.utc)}</span></div>`;last=k}
+h+=`<div class="nd ${i%2?'dn':'up'}${i===nxt?' now':''}" style="--c:${col(e.sq)}"><button class="cd" data-i="${ev.indexOf(e)}"><div class="ch"><span class="fls">${fl(hm(e.utc))}</span><span class="ot">${hm2(e.utc)}${f.z?' local':' Z'}</span>${i===nxt?'<span class="nx">PRÓXIMO</span>':''}</div><div class="cb"><div class="ty">${e.ty==='DEP'?'Decolagem':'Pouso'}</div><div class="rt">${esc(e.from||'—')}<u>›</u>${esc(e.to)}</div><div class="ms">${esc(e.mission)}</div><span class="tg">${esc(e.sq)}</span><span class="tg g">Anv ${esc(e.ac)}</span></div></button><div class="st"></div><div class="mk">${scene(e.ty)}</div></div>`});
+$('#rail').innerHTML=h;if(go)goNow()}
+
+function goNow(){const el=document.querySelector('.nd.now');if(el)el.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}
+
+function show(i){const e=ev[i],c=col(e.sq);
+const rt=e.route.map(x=>`<span class="pill${x===e.from||x===e.to?' hl':''}" style="--c:${c}">${esc(x)}</span>`).join('<span>›</span>');
+const it=e.fl.filter(m=>m.ty==='ARR'||m===e.fl.find(x=>x.ty==='DEP')).map(m=>`<span class="h" style="--c:${m===e?c:'var(--mu)'}">${m.ty==='DEP'?'Decola':'Pousa'}</span><span><b>${esc(m.from||'—')} → ${esc(m.to)}</b>${m.pax?' · pax/carga '+esc(m.pax):''}</span><span>${dl(m.utc)} ${hm(m.utc)}</span>`).join('');
+$('#dlg').innerHTML=`<div class="dh"><h2>Aeronave ${esc(e.ac)} · ${esc(e.sq)}</h2>${e.cid&&can('O')?`<button class="btn" data-ed="${e.cid}">Editar</button>`:''}<button class="btn" onclick="document.getElementById('dlg').close()">Fechar</button></div><div class="db"><div><h3>Rota completa</h3><div class="row2">${rt}</div></div><div><h3>Missão</h3><b>${esc(e.mission)||'—'}</b></div><div class="row2"><div><h3>Embarque</h3>${esc(e.emb)||'—'}</div><div style="margin-left:24px"><h3>Desembarque</h3>${esc(e.des)||'—'}</div></div>${e.orgao?`<div><h3>Órgão apoiado</h3>${esc(e.orgao)}</div>`:''}<div><h3>Decolagem e pouso deste voo (${f.z?'Z':'local'})</h3><div class="it" style="--c:${c}">${it}</div></div></div>`;
+$('#dlg').showModal()}
+
+document.addEventListener('click',e=>{const t=e.target.closest('[data-sq],[data-ty],[data-z],[data-bt],.cd,.br');if(!t)return;
+if(t.dataset.sq)f.sq=t.dataset.sq;else if(t.dataset.ty)f.ty=t.dataset.ty;else if(t.dataset.z!==undefined)f.z=t.dataset.z==='1';else if(t.dataset.bt)f.bt=t.dataset.bt;else{show(+t.dataset.i);return}
+render(!t.dataset.bt)});
+$('#day').onchange=e=>{f.day=e.target.value;render(true)};
+$('#q').oninput=e=>{f.q=e.target.value;render()};
+$('#mo').onchange=load;$('#now').onclick=goNow;
+$('#dlg').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+document.querySelector('label[for=file]').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#file').click()}};
+
+$('#file').onchange=e=>readFile(e.target.files[0]);
+addEventListener('dragover',e=>e.preventDefault());
+addEventListener('drop',e=>{e.preventDefault();readFile(e.dataTransfer.files[0])});
+tick();setInterval(tick,15000);
+const LS={g:k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+HID=!!LS.g('tl_hide');
+const SQ=['GTE 1','GTE 2','GTE 3','6 ETA','EXTERNAS'];
+let role='U',who='',auth=LS.g('tl_auth')||{},log=LS.g('tl_log')||[],WB=null,IM={},SR=[],mv=LS.g('tl_mv');
+srcName=LS.g('tl_src')||'Dados de exemplo';
+const RK={U:0,O:1,A:2},RN={U:'Usuário',O:'Operador',A:'Administrador'},can=n=>RK[role]>=RK[n];
+const hs=s=>{let h=5381;for(const c of s)h=(h*33)^c.charCodeAt(0);return String(h>>>0)};
+const msg=t=>{const m=$('#msg');if(m)m.textContent=t},D2=()=>$('#d2'),op=()=>{if(!D2().open)D2().showModal()};
+const lt=u=>{const d=new Date(u+OFF);return p2(d.getUTCDate())+'/'+p2(d.getUTCMonth()+1)+' '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+const saveM=()=>LS.s('tl_mv',mv),saveS=()=>LS.s('tl_src',srcName);
+const lg=(a,d)=>{log.unshift({t:Date.now(),w:(who?who+' · ':'')+RN[role],a,d});log=log.slice(0,500);LS.s('tl_log',log)};
+const dm=m=>`${m.ty==='DEP'?'Decolagem':'Pouso'} ${m.ac} ${m.from}›${m.to} ${lt(m.utc)}`;
+const LB={ty:'Tipo',ac:'Aeronave',sq:'Esquadrão',from:'Origem',to:'Destino',utc:'Data/hora',mission:'Missão',des:'Desembarque'};
+const fv=(k,v)=>k==='utc'?lt(v):k==='ty'?(v==='DEP'?'Decolagem':'Pouso'):(v||'—');
+const hyd=a=>{const h=a.map(m=>({...m,cid:m.id,sq:nsq(m.sq)})),g={};h.forEach(m=>(g[m.fid]=g[m.fid]||[]).push(m));Object.values(g).forEach(l=>l.sort((x,y)=>x.utc-y.utc));h.forEach(m=>m.fl=g[m.fid]);return h};
+function ex(){const n=Date.now(),H=36e5,mk=(ac,sq,rt,ts,ms,des)=>{const fid='e'+ac,B={fid,ac,sq,mission:ms,des,emb:'',orgao:'',pax:'',route:rt,src:'exemplo'},o=rt.slice(0,-1).map((c,i)=>({...B,id:fid+'d'+i,ty:'DEP',from:c,to:rt[i+1],utc:Math.round((n+ts[i]*H)/6e4)*6e4}));o.push({...B,id:fid+'a',ty:'ARR',from:rt[rt.length-2],to:rt[rt.length-1],utc:Math.round((n+ts[ts.length-1]*H)/6e4)*6e4});return o};
+return[...mk('2590','GTE 1',['BR','LPPT','BR'],[2,14,26],'PR ESCAV','EST AUT'),...mk('2019','6 ETA',['BR','MG','BR'],[1,5,7],'TOTEQ','P. ETA')]}
+if(!mv){mv=ex();saveM()}
+function applyRole(){$('#brole').textContent='Acesso: '+RN[role]+' ▾';$('#bnew').hidden=!can('O');$('#lfile').hidden=!can('A');$('#bhist').hidden=!can('A')}
+const adm=()=>`<h3>PIN do operador</h3><div class="row2"><input id="po" type="password" inputmode="numeric" placeholder="Novo PIN"><button class="btn" data-sp="O">Salvar</button></div><h3>PIN do administrador</h3><div class="row2"><input id="pa" type="password" inputmode="numeric" placeholder="Novo PIN"><button class="btn" data-sp="A">Salvar</button></div><h3>Backup (copie o texto; cole aqui para restaurar)</h3><textarea id="bk" rows="3"></textarea><div class="row2"><button class="btn" data-bk="g">Gerar backup</button><button class="btn" data-bk="r">Restaurar</button><button class="btn" data-cl>Apagar todos os voos</button></div>`;
+function roleD(){D2().innerHTML=`<div class="dh"><h2>Quem está usando?</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div class="row2">${Object.keys(RN).map(r=>`<button class="btn${role===r?' p':''}" data-r="${r}">${RN[r]}</button>`).join('')}</div><div id="rp"></div><div id="msg" class="wr"></div>${role==='A'?adm():''}</div>`;op()}
+function pick(r){if(r==='U'){role='U';who='';applyRole();D2().close();return}
+if(r==='O'&&!auth.O){msg('O administrador precisa criar o PIN do operador primeiro.');return}
+$('#rp').innerHTML=`<h3>${auth[r]?'Seu nome e PIN':'Crie o PIN de administrador (e informe seu nome)'}</h3><div class="row2"><input id="nm" placeholder="Seu nome" autocomplete="off"><input id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="PIN"><button class="btn p" data-ok="${r}">Entrar</button></div>`}
+function login(r){const v=$('#pin').value.trim();if(!v)return;if(!auth[r]&&r==='A'){auth.A=hs(v);LS.s('tl_auth',auth)}else if(auth[r]!==hs(v)){msg('PIN incorreto.');return}who=$('#nm').value.trim().toUpperCase();role=r;applyRole();D2().close()}
+function histD(){if(!can('A'))return;D2().innerHTML=`<div class="dh"><h2>Histórico de alterações</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div style="color:var(--mu);font-size:13px">Horários de Brasília. O registro fica guardado neste aparelho.</div>${log.length?log.map(x=>`<div class="lgi"><b>${lt(x.t)}</b> · ${esc(x.w)}<br><span class="ac">${esc(x.a)}</span> ${esc(x.d)}</div>`).join(''):'<div>Nenhuma alteração registrada ainda.</div>'}</div>`;op()}
+function formD(id){if(!can('O'))return;const c=mv.find(x=>x.id===id)||{},x=!!id,gn=x?mv.filter(m=>m.fid===c.fid).length:0,e2=[...new Set([...SQ,...sqs])],a=c.utc?(d=>[d.getUTCFullYear()+'-'+p2(d.getUTCMonth()+1)+'-'+p2(d.getUTCDate()),p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())])(new Date(c.utc+OFF)):['',''];
+const I=(k,l,v,t='text')=>`<label>${l}<input id="f_${k}" type="${t}" value="${esc(v||'')}"></label>`;
+D2().innerHTML=`<div class="dh"><h2>${x?'Editar movimento':'Novo voo'}</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div class="fm">${x?`<label>Tipo<select id="f_ty"><option value="DEP"${c.ty==='DEP'?' selected':''}>Decolagem</option><option value="ARR"${c.ty==='ARR'?' selected':''}>Pouso</option></select></label>`:''}${I('ac','Aeronave',c.ac)}<label>Esquadrão<select id="f_sq">${e2.map(s=>`<option${s===nsq(c.sq)?' selected':''}>${esc(s)}</option>`).join('')}</select></label>${I('so','Outro esquadrão (se não estiver na lista)','')}${I('from','Origem (ex.: BR)',c.from)}${I('to','Destino',c.to)}${I('dd',x?'Data':'Data da decolagem',a[0],'date')}${I('dt',x?'Hora':'Hora da decolagem',a[1],'time')}${x?'':I('ad','Data do pouso (opcional)','','date')+I('at','Hora do pouso (opcional)','','time')}<label>Horários informados em<select id="f_tz"><option value="L">Local (Brasília)</option><option value="Z">Zulu (Z)</option></select></label>${I('ms','Missão / quem é transportado',c.mission)}${I('ds','Desembarque',c.des)}</div><div id="msg" class="wr"></div><div class="row2"><button class="btn p" data-sv="${id||''}">Salvar</button>${x?`<button class="btn" data-del="${id}">Excluir movimento</button>`:''}${gn>1?`<button class="btn" data-delf="${c.fid}">Excluir voo inteiro (${gn})</button>`:''}</div></div>`;op()}
+function save(id){const g=k=>$('#f_'+k).value.trim(),U=k=>g(k).toUpperCase(),off=$('#f_tz').value==='Z'?0:OFF,T=(d,t)=>d&&t?Date.parse(d+'T'+t+':00Z')-off:null;
+const sq=nsq(U('so')||U('sq')),dep=T(g('dd'),g('dt')),ac=U('ac'),fr=U('from'),to=U('to');
+if(!ac||!sq||!fr||!to||!dep){msg('Preencha aeronave, esquadrão, origem, destino, data e hora.');return}
+const b={ac,sq,from:fr,to,mission:U('ms'),des:U('ds')};
+if(id){const i=mv.findIndex(m=>m.id===id),o=mv[i],n={...o,...b,ty:g('ty')||o.ty,utc:dep},ch=Object.keys(LB).filter(k=>o[k]!==n[k]).map(k=>`${LB[k]}: ${fv(k,o[k])} → ${fv(k,n[k])}`);if(!ch.length){D2().close();return}mv[i]=n;lg('Editou',dm(o)+' — '+ch.join('; '))}
+else{const arr=T(g('ad'),g('at'));if(arr&&arr<=dep){msg('O pouso precisa ser depois da decolagem.');return}const fid='m'+Date.now(),mk=(ty,u)=>({id:fid+ty,fid,ty,...b,utc:u,emb:'',orgao:'',pax:'',route:[fr,to],src:'manual'});mv.push(mk('DEP',dep));if(arr)mv.push(mk('ARR',arr));lg('Incluiu voo',`${ac} ${fr}›${to} ${lt(dep)}${arr?' (com pouso)':''}`)}
+saveM();load();D2().close()}
+const CL=n=>{let s='';for(n++;n>0;n=Math.floor((n-1)/26))s=String.fromCharCode(65+(n-1)%26)+s;return s};
+const FD=[['ac','Aeronave'],['sq','Esquadrão'],['from','Origem'],['to','Destino'],['dd','Data da decolagem'],['dt','Hora da decolagem (Z)'],['at','Hora do pouso (Z)'],['ms','Missão'],['ds','Desembarque']];
+const GU={ac:/aeronave|matr|prefixo/i,sq:/esquadr|unidade/i,from:/origem|embarque/i,to:/destino/i,dd:/data/i,dt:/hora|dep|decol/i,at:/pouso|eta|chegada/i,ms:/miss/i,ds:/desemb/i};
+function impD(){SR=XLSX.utils.sheet_to_json(WB.wb.Sheets[IM.sh],{header:1,raw:true,defval:''});
+if(!IM.hr)IM.hr=Math.max(1,SR.findIndex(r=>r.filter(x=>x!=='').length>=3)+1);
+const H=SR[IM.hr-1]||[],nc=Math.min(26,Math.max(H.length,...SR.slice(0,12).map(r=>r.length)));
+if(!IM.map){IM.map={};const u=new Set();FD.forEach(([k])=>{const j=H.findIndex((h,i)=>!u.has(i)&&GU[k].test(String(h)));if(j>=0){IM.map[k]=j;u.add(j)}})}
+const opt=v=>'<option value="">— não usar —</option>'+Array.from({length:nc},(_,j)=>`<option value="${j}"${v===j?' selected':''}>${CL(j)} — ${esc(String(H[j]||'').slice(0,24))}</option>`).join('');
+D2().innerHTML=`<div class="dh"><h2>Importar planilha</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div style="color:var(--mu);font-size:13px">Arquivo: ${esc(WB.name)}. No Google Planilhas: Arquivo › Fazer download › Microsoft Excel (.xlsx). A importação substitui os voos importados antes; os cadastrados à mão são mantidos.</div><div class="fm"><label>Aba<select id="i_sh">${WB.wb.SheetNames.map(n=>`<option${n===IM.sh?' selected':''}>${esc(n)}</option>`).join('')}</select></label><label>Mês dos voos<input id="i_mo" type="month" value="${IM.mo}"></label><label>Como ler<select id="i_md"><option value="t"${IM.md==='t'?' selected':''}>Modelo do painel (esquadrões)</option><option value="m"${IM.md==='m'?' selected':''}>Escolher as colunas</option></select></label></div>${IM.md==='m'?`<div class="fm"><label>Linha do cabeçalho<input id="i_hr" type="number" min="1" value="${IM.hr}"></label><label>Última linha (opcional)<input id="i_lr" type="number" value="${IM.lr}"></label>${FD.map(([k,l])=>`<label>${l}<select id="i_c_${k}">${opt(IM.map[k])}</select></label>`).join('')}<label>Esquadrão fixo (sem coluna)<input id="i_sqf" value="${esc(IM.sqf||'')}"></label></div>`:''}<h3>Prévia da aba</h3><div class="pv"><table>${SR.slice(0,10).map(r=>'<tr>'+Array.from({length:Math.min(nc,10)},(_,j)=>`<td>${esc(r[j])}</td>`).join('')+'</tr>').join('')}</table></div><div id="msg" class="wr"></div><button class="btn p" data-im>Importar</button></div>`;op()}
+function doImport(){const [y,m]=IM.mo.split('-').map(Number),st=Date.now();let nm=[];
+if(IM.md==='t'){nm=parse(SR,y,m-1).map((e,i)=>({id:'p'+st+'_'+i,fid:'p'+st+'_'+e.fid,ty:e.ty,ac:e.ac,sq:e.sq,from:e.from,to:e.to,utc:e.utc,mission:e.mission,des:e.des,emb:e.emb,orgao:e.orgao,pax:e.pax,route:e.route,src:'planilha'}));if(!nm.length){msg('Nenhum voo reconhecido neste modelo. Tente "Escolher as colunas".');return}}
+else{const M=IM.map,v=(r,k)=>M[k]==null?'':r[M[k]],T=(r,k)=>String(v(r,k)).trim().toUpperCase();
+const pd=x=>{if(typeof x==='number'&&x>31){const d=new Date(Date.UTC(1899,11,30)+Math.round(x)*864e5);return[d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()]}
+const s=String(x).trim();let a=/^(\d{4})-(\d{2})-(\d{2})/.exec(s);if(a)return[+a[1],a[2]-1,+a[3]];a=/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/.exec(s);if(a)return[a[3]?(+a[3]<100?2000+ +a[3]:+a[3]):y,a[2]-1,+a[1]];return/^\d{1,2}$/.test(s)?[y,m-1,+s]:null};
+const end=+IM.lr||SR.length;
+for(let i=IM.hr;i<end;i++){const r=SR[i];if(!r)continue;const ac=T(r,'ac'),fr=T(r,'from'),to=T(r,'to'),d=pd(v(r,'dd')),t=pt(v(r,'dt'));if(!ac||!fr||!to||!d||t==null)continue;
+const dep=Date.UTC(d[0],d[1],d[2],0,t),ta=pt(v(r,'at'));let arr=ta==null?null:Date.UTC(d[0],d[1],d[2],0,ta);if(arr!=null&&arr<=dep)arr+=864e5;
+const fid='p'+st+'_'+i,B={fid,ac,sq:nsq(T(r,'sq')||IM.sqf||'IMPORTADOS'),from:fr,to,mission:T(r,'ms'),des:T(r,'ds'),emb:'',orgao:'',pax:'',route:[fr,to],src:'planilha'};
+nm.push({...B,id:fid+'D',ty:'DEP',utc:dep});if(arr)nm.push({...B,id:fid+'A',ty:'ARR',utc:arr})}
+if(!nm.length){msg('Nenhum voo reconhecido. Confira a linha do cabeçalho e as colunas de aeronave, origem, destino, data e hora.');return}}
+mv=mv.filter(x=>x.src==='manual').concat(nm);srcName=WB.name;saveM();saveS();lg('Importou planilha',`${WB.name} — ${nm.length} movimentos`);load();D2().close()}
+function readFile(file){if(!file||!can('A'))return;const r=new FileReader();r.onload=()=>{try{const wb=XLSX.read(r.result,{type:'array'});WB={wb,name:file.name};IM={sh:wb.SheetNames[0],md:'t',hr:null,lr:'',map:null,mo:$('#mo').value};impD()}catch(e){toast('Não consegui ler este arquivo. Use uma planilha Excel (.xlsx) ou CSV.')}};r.readAsArrayBuffer(file)}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-x],[data-r],[data-ok],[data-sp],[data-bk],[data-cl],[data-ed],[data-sv],[data-del],[data-delf],[data-im]');if(!t)return;const d=t.dataset;
+if('x' in d)D2().close();else if(d.r)pick(d.r);else if(d.ok)login(d.ok);
+else if(d.sp){const v=$('#p'+d.sp.toLowerCase()).value.trim();if(v){auth[d.sp]=hs(v);LS.s('tl_auth',auth);lg('Alterou PIN','PIN do '+(d.sp==='O'?'operador':'administrador'));msg('PIN salvo.')}}
+else if(d.bk){if(d.bk==='g')$('#bk').value=JSON.stringify({mv,name:srcName});else try{const b=JSON.parse($('#bk').value);mv=b.mv||[];srcName=b.name||srcName;saveM();saveS();lg('Restaurou backup',mv.length+' movimentos');load();msg('Backup restaurado.')}catch(x){msg('Texto de backup inválido.')}}
+else if('cl' in d){ask('Apagar todos os voos do painel neste aparelho?',()=>{lg('Apagou todos os voos',mv.length+' movimentos');mv=[];srcName='Painel vazio';saveM();saveS();load();D2().close()})}
+else if('ed' in d){$('#dlg').close();formD(d.ed)}else if('sv' in d)save(d.sv);
+else if('del' in d){const m=mv.find(x=>x.id===d.del);if(m)ask('Excluir este movimento?',()=>{lg('Excluiu movimento',dm(m));mv=mv.filter(x=>x!==m);saveM();load();D2().close()})}
+else if('delf' in d){const l=mv.filter(x=>x.fid===d.delf);if(l.length)ask('Excluir o voo inteiro ('+l.length+' movimentos)?',()=>{lg('Excluiu voo',`${l[0].ac} — ${l.length} movimentos`);mv=mv.filter(x=>x.fid!==d.delf);saveM();load();D2().close()})}
+else if('im' in d)doImport()});
+D2().addEventListener('change',e=>{const i=e.target.id||'',v=e.target.value;if(!i.startsWith('i_'))return;
+if(i==='i_sh'){IM.sh=v;IM.hr=null;IM.map=null}else if(i==='i_md')IM.md=v;else if(i==='i_mo')IM.mo=v||IM.mo;else if(i==='i_hr'){IM.hr=+v||1;IM.map=null}else if(i==='i_lr')IM.lr=v;else if(i==='i_sqf')IM.sqf=v;else if(i.startsWith('i_c_'))IM.map[i.slice(4)]=v===''?undefined:+v;
+impD()});
+$('#bnew').onclick=()=>formD();$('#brole').onclick=roleD;$('#bhist').onclick=histD;applyRole();
+const ZS=[.6,.75,.9,1,1.15,1.3,1.5,1.75,2];let zi=ZS.indexOf(LS.g('tl_zoom'));if(zi<0)zi=3;
+function setZ(n){const t=$('#tl'),r=(t.scrollLeft+t.clientWidth/2)/(t.scrollWidth||1);zi=Math.max(0,Math.min(ZS.length-1,n));document.documentElement.style.setProperty('--z',ZS[zi]);$('#zv').textContent=Math.round(ZS[zi]*100)+'%';LS.s('tl_zoom',ZS[zi]);t.scrollLeft=r*t.scrollWidth-t.clientWidth/2}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-zm]');if(b)setZ(zi+(b.dataset.zm==='+'?1:-1))});setZ(zi);
+function ask(t,yes){const d=$('#d3');d.innerHTML=`<div class="dh"><h2>Confirmar</h2></div><div class="db"><div>${esc(t)}</div><div class="row2"><button class="btn p" id="cy">Sim, excluir</button><button class="btn" id="cn">Cancelar</button></div></div>`;d.showModal();$('#cy').onclick=()=>{d.close();yes()};$('#cn').onclick=()=>d.close()}
+function toast(t){const e=$('#ts');e.textContent=t;e.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>{e.hidden=true},4500)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-bd]');if(!b)return;HID=b.dataset.bd==='1';LS.s('tl_hide',HID);board()});
+load();
+</script>
+<script>if("serviceWorker" in navigator)addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})</script>
+</body></html>
