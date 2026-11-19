@@ -1,5 +1,6 @@
-const C='voos-babr-v1';
+const C='voos-babr-v3';
 self.addEventListener('install',e=>{self.skipWaiting()});
 self.addEventListener('activate',e=>{e.waitUntil(clients.claim())});
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;
-e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(C).then(k=>k.put(e.request,c)).catch(()=>{});return r}).catch(()=>caches.match(e.request).then(r=>r||caches.match('./index.html'))))});
+self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;
+const u=new URL(r.url);if(u.origin!==location.origin&&r.destination!=='script')return;
+e.respondWith(fetch(r).then(x=>{const c=x.clone();caches.open(C).then(k=>k.put(r,c)).catch(()=>{});return x}).catch(()=>caches.match(r).then(x=>x||caches.match('./index.html'))))});
