@@ -1,6 +1,13 @@
-const C='voos-babr-v3';
-self.addEventListener('install',e=>{self.skipWaiting()});
-self.addEventListener('activate',e=>{e.waitUntil(clients.claim())});
-self.addEventListener('fetch',e=>{const r=e.request;if(r.method!=='GET')return;
-const u=new URL(r.url);if(u.origin!==location.origin&&r.destination!=='script')return;
-e.respondWith(fetch(r).then(x=>{const c=x.clone();caches.open(C).then(k=>k.put(r,c)).catch(()=>{});return x}).catch(()=>caches.match(r).then(x=>x||caches.match('./index.html'))))});
+/* Service worker: guarda o painel e as bibliotecas para abrir sem internet. */
+const C='babr-v2',HOSTS=['cdnjs.cloudflare.com','www.gstatic.com','fonts.googleapis.com','fonts.gstatic.com','cdn.jsdelivr.net'];
+self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(['./','./index.html'])).then(()=>self.skipWaiting()))});
+self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim()))});
+self.addEventListener('fetch',e=>{
+  const r=e.request,u=new URL(r.url);
+  if(r.method!=='GET'||!(u.origin===location.origin||HOSTS.includes(u.hostname)))return;
+  e.respondWith(caches.open(C).then(async c=>{
+    const m=await c.match(r,{ignoreSearch:u.origin===location.origin})||(r.mode==='navigate'?await c.match('./index.html'):undefined);
+    const n=fetch(r).then(x=>{if(x&&(x.ok||x.type==='opaque'))c.put(r,x.clone());return x}).catch(()=>m);
+    return m||n;
+  }));
+});

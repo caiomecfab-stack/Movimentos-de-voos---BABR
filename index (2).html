@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#16314c"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes">
+<title>Movimentos de Voos BABR</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap">
+<style>
+:root{--bg:#16314c;--bg2:#1c3b59;--sf:#244a6d;--bd:#3d688f;--tx:#eef5fb;--mu:#a8c0d6;--am:#ffc83d;--pn:#0d1d2e;--rw:#14293f;--in:#0f2539;--rb:10px;--g1:#15304b;--g2:#1a3a58;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);background:var(--g1)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100%;background:linear-gradient(160deg,var(--g1),var(--g2));color:var(--tx);font:15px/1.4 Barlow,"Segoe UI",system-ui,sans-serif}
+header{display:flex;flex-wrap:wrap;gap:12px;align-items:center;padding:14px 16px 8px}
+h1{margin:0;font:700 36px/1 "Barlow Condensed","Arial Narrow",sans-serif;flex:1 1 220px}
+h1 small{display:block;font:500 13px Barlow,system-ui,sans-serif;color:var(--mu);margin-top:5px}
+.clk{display:flex;gap:8px}.clk div{background:var(--pn);border-radius:8px;padding:4px 10px 7px}
+.clk small{display:block;font:600 11px Barlow,system-ui,sans-serif;color:var(--mu);margin-bottom:2px}.clk .fls{font-size:22px}
+.btn,.chip,.seg button{border:1px solid var(--bd);background:rgba(255,255,255,.07);color:var(--tx);border-radius:var(--rb);padding:8px 14px;min-height:42px;cursor:pointer;font:600 14px Barlow,system-ui,sans-serif;white-space:nowrap}
+.btn.p{background:var(--am);border-color:var(--am);color:#1a1300}
+.btn:focus-visible,.chip:focus-visible,.seg button:focus-visible,.cd:focus-visible,.br:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+.bar{display:flex;gap:8px;padding:4px 16px;overflow-x:auto;align-items:center;scrollbar-width:none}
+.bar::-webkit-scrollbar{display:none}
+.chip.on{background:var(--c,var(--am));border-color:var(--c,var(--am));color:#06121f}
+.chip i{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--c);margin-right:7px}
+.chip.on i{background:#06121f}
+.seg{display:flex}.seg button{border-radius:0;margin-left:-1px}
+.seg button:first-child{border-radius:var(--rb) 0 0 var(--rb);margin:0}.seg button:last-child{border-radius:0 var(--rb) var(--rb) 0}
+.seg button.on{background:var(--am);border-color:var(--am);color:#1a1300}
+input,select{border:1px solid var(--bd);background:var(--in);color:var(--tx);border-radius:var(--rb);padding:8px 12px;min-height:42px;font:500 14px Barlow,system-ui,sans-serif}
+input[type=search]{min-width:170px;flex:1}
+.info{padding:6px 16px;color:var(--mu);font-size:13px}
+.fls{display:inline-flex;gap:2px;vertical-align:middle}
+.fl{display:inline-block;min-width:.7em;text-align:center;padding:0 4px;background:linear-gradient(#1a2e43 50%,#0b1723 50%);color:var(--am);border-radius:3px;font:700 1em/1.2 "Barlow Condensed","Arial Narrow",sans-serif;position:relative;animation:fp .45s ease-out both;animation-delay:calc(var(--k)*30ms)}
+.fl:after{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(0,0,0,.75)}
+.co{color:var(--am);font-weight:700;padding:0 1px}
+@keyframes fp{from{transform:rotateX(-90deg)}to{transform:none}}
+@media (prefers-reduced-motion:reduce){.fl{animation:none}}
+.board{margin:6px 16px;background:var(--pn);border:1px solid var(--bd);border-radius:12px;padding:6px 8px;box-shadow:0 4px 14px rgba(0,0,0,.3)}
+.bh{display:flex;align-items:center;gap:8px}.bh .hint{color:var(--mu);font-size:12px;flex:1;min-width:0}.board .seg button{min-height:34px;padding:4px 12px;font-size:13px}
+.seg .ic{width:30px;height:12px;vertical-align:-1px;margin-right:6px;--wc:var(--pn)}
+.br{display:grid;grid-template-columns:auto auto 1fr auto;gap:2px 12px;align-items:center;width:100%;text-align:left;background:var(--rw);border:0;border-left:5px solid var(--c);border-radius:8px;padding:4px 10px;margin-top:4px;color:var(--tx);cursor:pointer;font:inherit}
+.br .fls{font-size:20px}.bi{min-width:0}.bi b{font-size:14px}.bi small{font-size:12px}
+.bi b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bi small{color:var(--mu)}
+.bs{color:var(--am);font-weight:600;font-size:12px;text-align:right}
+@media (max-width:640px){.br{grid-template-columns:auto 1fr auto}.br .dst{justify-self:start}.bs{grid-column:3;grid-row:1}.bi{grid-column:1/-1;grid-row:2}.bh .hint{display:none}h1{font-size:30px}}
+.tl{height:calc(max(470px,58vh)*var(--z,1));overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;background:rgba(10,24,38,.28);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.rail{display:flex;align-items:stretch;height:max(470px,58vh);zoom:var(--z,1);width:max-content;padding:0 30px;background:repeating-linear-gradient(90deg,#cfe0ee 0 18px,transparent 18px 38px) 0 50%/100% 2px no-repeat,linear-gradient(#0e2133,#0e2133) 0 50%/100% 12px no-repeat}
+.nd{position:relative;width:196px;flex:none}
+.mk{position:absolute;left:50%;top:50%;width:96px;height:56px;margin:-28px 0 0 -48px;border-radius:14px;background:var(--c);border:3px solid #16314c;z-index:2;box-shadow:0 4px 12px rgba(0,0,0,.45);color:#fff}
+.mk svg{display:block;width:100%;height:100%}
+.st{position:absolute;left:50%;width:4px;margin-left:-2px;height:36px;background:var(--c)}
+.up .st{bottom:50%}.dn .st{top:50%}
+.cd{position:absolute;left:4px;right:4px;background:var(--sf);border:1px solid var(--bd);border-top:5px solid var(--c);border-radius:6px 6px 14px 14px;padding:0;overflow:hidden;box-shadow:0 6px 16px rgba(0,0,0,.38);cursor:pointer;text-align:left;color:inherit;font:inherit}
+.up .cd{bottom:calc(50% + 34px)}.dn .cd{top:calc(50% + 34px)}
+.nd.now .cd{box-shadow:0 0 0 3px var(--am),0 6px 16px rgba(0,0,0,.38)}
+.ch{display:flex;align-items:center;gap:8px;padding:6px 10px;background:var(--pn);border-bottom:2px dashed var(--bd)}
+.ch .fls{font-size:28px}
+.ot{color:var(--mu);font:600 12px Barlow,system-ui,sans-serif}
+.nx{margin-left:auto;background:var(--am);color:#1a1300;font:700 11px Barlow,system-ui,sans-serif;padding:2px 6px;border-radius:5px}
+.cb{padding:7px 10px 9px}
+.ty{font:700 13px "Barlow Condensed","Arial Narrow",sans-serif;color:var(--c);letter-spacing:.08em;text-transform:uppercase}
+.rt{font:700 27px/1.1 "Barlow Condensed","Arial Narrow",sans-serif}.rt u{text-decoration:none;color:var(--c);padding:0 3px}
+.ms{font-size:13px;color:var(--mu);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.7em}
+.tg{display:inline-block;font-size:12px;font-weight:600;border-radius:5px;padding:1px 7px;background:var(--c);color:#06121f;margin:3px 4px 0 0}
+.tg.g{background:rgba(255,255,255,.15);color:var(--tx)}
+.dd{width:92px;flex:none;position:relative}
+.dd:before{content:"";position:absolute;left:50%;top:5%;bottom:5%;border-left:2px dashed var(--bd)}
+.dd span{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--am);color:#1a1300;font:700 17px "Barlow Condensed","Arial Narrow",sans-serif;padding:4px 10px;border-radius:8px;white-space:nowrap;z-index:3}
+.empty{margin:auto;padding:30px;text-align:center;color:var(--mu);max-width:340px}
+dialog{border:0;border-radius:16px;padding:0;width:calc(100% - 24px);max-width:560px;max-height:88%;background:var(--sf);color:var(--tx);box-shadow:0 10px 40px rgba(0,0,0,.6)}
+dialog::backdrop{background:rgba(5,12,20,.65)}
+.dh{padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;gap:10px;align-items:center}
+.dh h2{margin:0;font:700 24px "Barlow Condensed","Arial Narrow",sans-serif;flex:1}
+.db{padding:12px 16px 16px;display:grid;gap:10px}
+.db h3{margin:0;font-size:13px;color:var(--mu);font-weight:600}
+.row2{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.pill{border:1px solid var(--bd);border-radius:8px;padding:3px 9px;font-weight:600}
+.pill.hl{background:var(--c);border-color:var(--c);color:#06121f}
+.it{display:grid;grid-template-columns:auto 1fr auto;gap:4px 10px;font-size:14px}
+.it .h{font-weight:700;color:var(--c)}
+textarea{width:100%;border:1px solid var(--bd);background:var(--in);color:var(--tx);border-radius:var(--rb);padding:8px;font:12px monospace}
+.fm{display:grid;grid-template-columns:1fr 1fr;gap:8px}.fm label{display:grid;gap:3px;font-size:13px;color:var(--mu)}.fm input,.fm select{width:100%}
+.pv{overflow:auto;max-height:190px;border:1px solid var(--bd);border-radius:8px}.pv table{border-collapse:collapse;font-size:12px}.pv td{border:1px solid var(--bd);padding:2px 6px;white-space:nowrap}
+dialog{overflow:auto}.wr{color:var(--am);min-height:1.2em}
+@media (max-width:520px){.fm{grid-template-columns:1fr}}
+.zmb{display:flex;align-items:center;gap:10px;padding:0 16px;flex-wrap:wrap}.zmb .info{flex:1 1 220px;padding:6px 0}
+.zm{display:flex;align-items:center;gap:6px}.zm button{width:46px;height:46px;border-radius:var(--rb);border:1px solid var(--bd);background:rgba(255,255,255,.07);color:var(--tx);font:700 24px/1 Barlow,sans-serif;cursor:pointer}.zm span{min-width:48px;text-align:center;font-weight:600}
+.lgi{border-left:4px solid var(--am);padding:5px 10px;background:rgba(255,255,255,.06);border-radius:6px;font-size:14px}.lgi .ac{color:var(--am);font-weight:700}
+@media (max-width:700px){#fab:not([hidden]){position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:20;display:flex;gap:10px}#fab .btn{min-height:54px;padding:0 18px;border-radius:999px;background:var(--am);border-color:var(--am);color:#1a1300;font-size:16px;box-shadow:0 6px 18px rgba(0,0,0,.5)}}
+@media (min-width:701px){#fab{display:contents}}
+.bt{margin-left:auto;border:1px solid var(--bd);background:rgba(255,255,255,.07);color:var(--tx);border-radius:var(--rb);padding:4px 12px;min-height:34px;cursor:pointer;font:600 13px Barlow,system-ui,sans-serif;white-space:nowrap}
+.board.min{padding:4px 8px}.board.min .bt{margin:0;width:100%;text-align:left;min-height:38px;color:var(--mu)}
+.bt:focus-visible{outline:3px solid var(--am);outline-offset:2px}
+.ts{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom,0px));z-index:50;background:var(--am);color:#1a1300;font:600 14px Barlow,system-ui,sans-serif;padding:10px 16px;border-radius:var(--rb);box-shadow:0 6px 18px rgba(0,0,0,.5);max-width:calc(100% - 32px)}
+.btn.mini{min-height:30px;padding:2px 10px;font-size:13px}
+.it{grid-template-columns:auto 1fr auto auto!important;align-items:center}
+.thf{display:grid;grid-template-columns:1fr auto 52px auto;gap:8px;align-items:center;font-size:13px;color:var(--tx)}
+.thf input[type=color]{width:44px;height:34px;padding:0;min-height:0;border:1px solid var(--bd);background:none;border-radius:8px;cursor:pointer}
+.thf input[type=range]{width:110px;min-height:0;padding:0}
+.thf output{color:var(--mu);font-size:12px;text-align:right}
+.rs{min-height:30px!important;padding:0 9px!important}.rs:disabled{opacity:.3;cursor:default}
+.ths{display:grid;gap:3px;font-size:13px;color:var(--mu)}.ths select{width:100%}
+#d4{position:fixed;inset:auto 12px calc(12px + env(safe-area-inset-bottom,0px)) auto;margin:0;width:min(390px,calc(100% - 24px));max-height:64vh;z-index:40;overflow:hidden;--tx:#eef5fb;--mu:#a8c0d6;--bd:#3d688f;--am:#ffc83d;--sf:#244a6d;--in:#0f2539;--rb:10px;background:#244a6d;color:#eef5fb;border:1px solid #3d688f}
+#d4[open]{display:flex;flex-direction:column}
+#d4 .db{overflow:auto;min-height:0}
+#d4 .dh{border-bottom-color:#3d688f}
+#d4 select{background:#0f2539;color:#eef5fb;border-color:#3d688f}
+#d4 .btn:not(.p),#d4 .seg button:not(.on){background:rgba(255,255,255,.07);color:#eef5fb;border-color:#3d688f}
+#d4 .seg button.on{background:#ffc83d;border-color:#ffc83d;color:#1a1300}
+.sy{font:600 12px Barlow,system-ui,sans-serif;color:var(--mu);display:inline-flex;align-items:center;gap:6px}
+.sy:before{content:"";width:9px;height:9px;border-radius:50%;background:#888}
+.sy.ok:before{background:#3ddc97}.sy.pe:before{background:#ffc83d}.sy.of:before{background:#ff6b8a}
+@keyframes pk{50%{background:#c1121f;box-shadow:0 0 0 4px #ffc83d,0 0 26px #ff3b3b}}
+@keyframes pkb{50%{background:#7a0f18}}
+.cd.blk{animation:pk 1s ease-in-out infinite}.br.blk{animation:pkb 1s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){.cd.blk{animation:none;background:#c1121f}.br.blk{animation:none;background:#7a0f18}}
+.tg.of{background:#c1121f;color:#fff}
+.chk{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px}.chk input{width:22px;height:22px;min-height:0;padding:0;accent-color:var(--am)}.chk small{font-weight:400;color:var(--mu)}
+.uit{border:1px solid var(--bd);border-radius:10px;padding:8px 10px;display:grid;gap:6px}
+[hidden]{display:none!important}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute"><defs><g id="jet" fill="currentColor"><path d="M4 12C4 10 8 9 14 9H46C54 9 60 11 62 12.5C60 14 54 15.5 46 15.5H14C8 15.5 4 14 4 12Z"/><path d="M6 10.5 3 2H9L17 9.5Z"/><path d="M25 14H41L31 22.5H24Z" opacity=".85"/><ellipse cx="33" cy="19" rx="4" ry="1.7"/><path d="M17 11.8H45" style="stroke:var(--wc,var(--c));stroke-width:1.6;stroke-dasharray:2 2.2;fill:none"/></g></defs></svg>
+<header>
+<h1>Movimentos de voos - BABR<small id="src">Dados de exemplo</small></h1>
+<div class="clk"><div><small>Brasília</small><span id="cl"></span></div><div><small>Zulu (Z)</small><span id="cz"></span></div></div>
+<div id="fab" hidden><button class="btn" id="bnew">+ Decolagem</button><button class="btn" id="bpso">+ Pouso</button></div><label class="btn p" for="file" id="lfile" tabindex="0" hidden>Importar planilha</label>
+<input id="file" type="file" accept=".xlsx,.xls,.csv" hidden>
+<button class="btn" id="now">Próximo voo</button><button class="btn" id="brole">Acesso: Usuário ▾</button><button class="btn" id="bhist" hidden>Histórico</button><button class="btn" id="bthm" hidden>Personalizar</button><button class="btn" id="busr" hidden>Usuários</button><button class="btn" id="bsyn" hidden>Sincronização</button><span id="sy" class="sy" role="status"></span>
+</header>
+<div class="bar" id="sqs" aria-label="Esquadrão"></div>
+<div class="bar">
+<div class="seg" id="tys"><button data-ty="ALL" class="on">Tudo</button><button data-ty="DEP">Decolagens</button><button data-ty="ARR">Pousos</button></div>
+<div class="seg" id="zs"><button data-z="0" class="on">Hora local</button><button data-z="1">Hora Z</button></div>
+<select id="day" aria-label="Dia"></select>
+<input id="mo" type="month" aria-label="Mês dos voos" hidden>
+<input id="q" type="search" placeholder="Buscar aeronave, local ou missão">
+</div>
+<section class="board" id="board"></section>
+<main class="tl" id="tl"><div class="rail" id="rail"></div></main>
+<dialog id="dlg"></dialog><dialog id="d2"></dialog><dialog id="d3"></dialog><dialog id="d4"></dialog><div id="ts" class="ts" role="status" hidden></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+/* SINCRONIZAÇÃO (Supabase): cole aqui a URL e a chave "anon" do projeto para todos os aparelhos conectarem sozinhos. */
+const SB_URL="",SB_KEY="";
+const $=s=>document.querySelector(s),p2=n=>String(n).padStart(2,'0');
+const PAL=['#4cc3ff','#3ddc97','#ff8a5b','#d4e157','#ff6b8a','#2dd4bf'];
+const LEG=/^([A-Z0-9]{2,5})\s+(\d{1,2})$/,ETA=/^(?:([A-Z0-9]{2,5})\s+)?(\d{1,2})(?:\.0+)?$/;
+const WD=['DOM','SEG','TER','QUA','QUI','SEX','SÁB'],OFF=-10800000;
+const acf=a=>{const m=/^([A-Z]+)-?(\d+[A-Z]?)$/.exec(String(a||'').toUpperCase());return m?m[1]+'-'+m[2]:a};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const nsq=s=>{s=String(s).toUpperCase().trim();let a;if(/6\s*[°ºO]?\s*ETA/.test(s))return'6 ETA';if(/EXTERN/.test(s))return'EXTERNAS';if(/ESTRANG/.test(s))return'ESTRANGEIRAS';if(a=/^GTE\s*-?\s*(\d)/.exec(s))return'GTE '+a[1];return s},norm=nsq;
+const pt=v=>{if(typeof v==='number'&&v<1)return Math.round(v*1440)%1440;const m=/(\d{1,2})\s*[:hH.]?\s*(\d{2})/.exec(String(v));return m&&+m[1]<24?+m[1]*60+ +m[2]:null};
+
+
+function parse(rows,y,mo){
+const out=[];let sq='',fid=0;
+rows.forEach((r,i)=>{
+r=(r||[]).map(x=>x==null?'':x);const s=k=>String(r[k]).trim().toUpperCase();
+const lc=[3,4,5,6,7,8].map(k=>LEG.exec(s(k)));
+if(!lc.some(Boolean)){if(String(r[0]).trim()&&!String(r[1]).trim()&&!String(r[2]).trim())sq=norm(String(r[0]));return}
+const ac=String(r[0]).trim();if(!ac)return;
+const nx=rows[i+1]||[];let orgao='',paxr=null;
+[2,3].forEach(o=>{const q=rows[i+o]||[];if(/PAX/i.test(q[2]||''))paxr=q;if(/RG[ÃA]O/i.test(q[2]||''))orgao=String(q[3]||'').trim()});
+const legs=[];lc.forEach((m,k)=>{if(m)legs.push({c:m[1],d:+m[2],t:pt(nx[3+k]),x:paxr?String(paxr[3+k]||'').trim():''})});
+const route=s(2).split(/\s*-\s*/).filter(Boolean);
+let k0=-1;for(let a=0;a+legs.length<=route.length&&k0<0;a++)if(legs.every((l,j)=>route[a+j]===l.c))k0=a;
+const em=ETA.exec(s(9)),eLoc=(em&&em[1])||'BR',eT=pt(nx[9]);
+let m=mo,prev=0;
+const U=(d,t,c)=>{let mm=m;if(d<prev){mm=m+1;if(c)m=mm}if(c)prev=d;return Date.UTC(y,mm,d,0,t)};
+const base={ac,sq,fid:++fid,emb:String(r[1]).trim(),mission:String(r[10]).trim(),des:String(r[12]).trim(),orgao,route};
+const evs=[];
+legs.forEach((l,j)=>{if(l.t==null)return;evs.push({...base,ty:'DEP',from:l.c,to:(k0>=0&&route[k0+j+1])||(legs[j+1]&&legs[j+1].c)||eLoc,utc:U(l.d,l.t,true),pax:l.x})});
+if(em&&eT!=null){const u=U(+em[2],eT,false),pv=evs.filter(e=>e.utc<=u).pop();evs.push({...base,ty:'ARR',from:pv?pv.from:'',to:eLoc,utc:u,pax:''})}
+evs.sort((a,b)=>a.utc-b.utc);evs.forEach(e=>e.fl=evs);out.push(...evs)});
+return out.sort((a,b)=>a.utc-b.utc||(a.ty==='ARR'?-1:1))}
+
+let HID=false,rows=[],ev=[],sqs=[],srcName='Dados de exemplo',f={bt:'DEP',sq:'ALL',ty:'ALL',day:'ALL',q:'',z:false};
+const now0=new Date();$('#mo').value=now0.getFullYear()+'-'+p2(now0.getMonth()+1);
+try{const sv=JSON.parse(localStorage.getItem('tl_rows')||'null');if(sv&&sv.rows){rows=sv.rows;srcName=sv.name||'Planilha carregada'}}catch(e){}
+const col=sq=>(TH.o.sqc&&TH.o.sqc[sq])||PAL[Math.max(0,sqs.indexOf(sq))%PAL.length];
+const sh=()=>f.z?0:OFF;
+const dt=u=>new Date(u+sh()),hm=u=>{const d=dt(u);return p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+const hm2=u=>{const d=new Date(u+(f.z?OFF:0));return p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+const dk=u=>{const d=dt(u);return d.getUTCFullYear()+'-'+p2(d.getUTCMonth()+1)+'-'+p2(d.getUTCDate())};
+const dl=u=>{const d=dt(u);return WD[d.getUTCDay()]+' '+p2(d.getUTCDate())+'/'+p2(d.getUTCMonth()+1)};
+
+function load(k){const [y,m]=$('#mo').value.split('-').map(Number);ev=hyd(mv).sort((a,b)=>a.utc-b.utc||(a.ty==='ARR'?-1:1));sqs=[...SQ,...new Set(ev.map(e=>e.sq).filter(x=>!SQ.includes(x)))];$('#src').textContent=srcName;if(f.sq!=='ALL'&&f.sq!=='GTE'&&!sqs.includes(f.sq))f.sq='ALL';render(!k)}
+
+const fl=t=>[...String(t)].map((c,k)=>c===':'?'<i class="co">:</i>':`<span class="fl" style="--k:${k}">${esc(c)}</span>`).join('');
+const J=t=>`<use href="#jet" transform="${t}"/>`;
+const GR='<path d="M5 49H91" stroke="#fff" stroke-opacity=".5" stroke-width="2" stroke-dasharray="7 5"/>';
+const scene=ty=>ty==='DEP'?`<svg viewBox="0 0 96 56">${GR}<path d="M8 46C34 44 52 34 70 14" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-dasharray="2 4" fill="none"/>${J('translate(40 6) rotate(-26 20 7) scale(.62)')}</svg>`:`<svg viewBox="0 0 96 56">${GR}<path d="M6 8C34 12 56 26 74 44" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-dasharray="2 4" fill="none"/>${J('translate(32 16) rotate(22 20 7) scale(.62)')}</svg>`;
+const sqm=e=>f.sq==='ALL'||e.sq===f.sq||(f.sq==='GTE'&&e.sq.startsWith('GTE'));
+const hmx=u=>{const d=new Date(u);return p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+function tick(){const n=Date.now();$('#cl').innerHTML=fl(hmx(n+OFF));$('#cz').innerHTML=fl(hmx(n))}
+function board(){
+const bd=$('#board');bd.classList.toggle('min',HID);if(HID){bd.innerHTML='<button class="bt" data-bd="0">Mostrar quadro de partidas e chegadas ▾</button>';return}
+const q=f.q.toLowerCase(),t=f.bt,n=Date.now(),ic='<svg class="ic" viewBox="0 0 64 24" style="color:currentColor"><use href="#jet" transform="rotate(-24 32 12)"/></svg>';
+const l=ev.filter(e=>e.ty===t&&sqm(e)&&(!q||[e.ac,e.sq,e.from,e.to,e.mission,e.des].join(' ').toLowerCase().includes(q)));
+let u=l.filter(e=>e.utc>=n-1800000);if(!u.length)u=l.slice(-4);u=u.slice(0,4);
+const st=e=>{const m=Math.round((e.utc-n)/60000);return m<0?'Já ocorreu':m<60?'em '+m+' min':m<1440?'em '+Math.floor(m/60)+' h '+p2(m%60)+' min':'em '+Math.floor(m/1440)+' d'};
+$('#board').innerHTML=`<div class="bh"><div class="seg"><button data-bt="DEP" class="${t==='DEP'?'on':''}">${ic}Partidas</button><button data-bt="ARR" class="${t==='ARR'?'on':''}">${ic.replace('-24','24')}Chegadas</button></div><span class="hint">Próximos 4 movimentos · toque para ver o roteiro</span><button class="bt" data-bd="1">Ocultar quadro ▴</button></div>`+
+(u.length?u.map(e=>`<button class="br${e.ofg&&e.utc>n?' blk':''}" data-i="${ev.indexOf(e)}"${e.ofg?` data-ofg="${e.utc}"`:''} style="--c:${col(e.sq)}"><span class="fls">${fl(hm(e.utc))}</span><span class="fls dst">${fl(t==='DEP'?e.to:(e.from||'—'))}</span><span class="bi"><b>${esc(e.mission)||'Sem missão informada'}</b><small>${esc(e.sq)} · ${esc(acf(e.ac))}${e.esq?' · '+esc(e.esq):''} · ${dl(e.utc)}</small></span><span class="bs">${st(e)}</span></button>`).join(''):'<div class="empty">Sem movimentos para mostrar.</div>')}
+function render(go){
+$('#sqs').innerHTML='<button class="chip'+(f.sq==='ALL'?' on':'')+'" data-sq="ALL">Todos os esquadrões</button><button class="chip'+(f.sq==='GTE'?' on':'')+'" style="--c:'+col('GTE 1')+'" data-sq="GTE"><i></i>Todos os GTE</button>'+sqs.map(s=>`<button class="chip${f.sq===s?' on':''}" style="--c:${col(s)}" data-sq="${esc(s)}"><i></i>${esc(s)}</button>`).join('');
+document.querySelectorAll('#tys button').forEach(b=>b.classList.toggle('on',b.dataset.ty===f.ty));
+document.querySelectorAll('#zs button').forEach(b=>b.classList.toggle('on',(b.dataset.z==='1')===f.z));
+const days=[...new Map(ev.map(e=>[dk(e.utc),dl(e.utc)]))];
+if(f.day!=='ALL'&&!days.some(d=>d[0]===f.day))f.day='ALL';
+$('#day').innerHTML='<option value="ALL">Todos os dias</option>'+days.map(d=>`<option value="${d[0]}"${f.day===d[0]?' selected':''}>${d[1]}</option>`).join('');
+const q=f.q.toLowerCase();board();
+const list=ev.filter(e=>sqm(e)&&(f.ty==='ALL'||e.ty===f.ty)&&(f.day==='ALL'||dk(e.utc)===f.day)&&(!q||[e.ac,e.sq,e.from,e.to,e.mission,e.des,e.emb].join(' ').toLowerCase().includes(q)));
+if(!list.length){$('#rail').innerHTML='<div class="empty"><b>Nenhum voo encontrado</b><br>Mude os filtros ou carregue uma planilha com seções de esquadrão e horários.</div>';return}
+const nxt=list.findIndex(e=>e.utc>=Date.now());let last='',h='';
+list.forEach((e,i)=>{const k=dk(e.utc);if(k!==last){h+=`<div class="dd"><span>${dl(e.utc)}</span></div>`;last=k}
+h+=`<div class="nd ${i%2?'dn':'up'}${i===nxt?' now':''}" style="--c:${col(e.sq)}"><button class="cd${e.ofg&&e.utc>Date.now()?' blk':''}" data-i="${ev.indexOf(e)}"${e.ofg?` data-ofg="${e.utc}"`:''}><div class="ch"><span class="fls">${fl(hm(e.utc))}</span><span class="ot">${hm2(e.utc)}${f.z?' local':' Z'}</span>${i===nxt?'<span class="nx">PRÓXIMO</span>':''}</div><div class="cb"><div class="ty">${e.ty==='DEP'?'Decolagem':'Pouso'}</div><div class="rt">${esc(e.from||'—')}<u>›</u>${esc(e.to)}</div><div class="ms">${esc(e.mission)}</div><span class="tg">${esc(e.sq)}</span><span class="tg g">${esc(acf(e.ac))}</span>${e.esq?`<span class="tg g">${esc(e.esq)}</span>`:''}${e.ofg?'<span class="tg of">OF GENERAL</span>':''}</div></button><div class="st"></div><div class="mk">${scene(e.ty)}</div></div>`});
+$('#rail').innerHTML=h;if(go)goNow()}
+
+function goNow(){const el=document.querySelector('.nd.now');if(el)el.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'})}
+
+function show(i){const e=ev[i],c=col(e.sq),ed=can('O'),ag=e.src==='agenda';
+const rt=e.route.map(x=>`<span class="pill${x===e.from||x===e.to?' hl':''}" style="--c:${c}">${esc(x)}</span>`).join('<span>›</span>');
+const it=e.fl.filter(m=>m.ty==='ARR'||m===e.fl.find(x=>x.ty==='DEP')).map(m=>`<span class="h" style="--c:${m===e?c:'var(--mu)'}">${m.ty==='DEP'?'Decola':'Pousa'}</span><span><b>${esc(m.from||'—')} → ${esc(m.to)}</b>${m.pax?' · pax/carga '+esc(m.pax):''}</span><span>${dl(m.utc)} ${hm(m.utc)}</span><span>${ed&&m.cid&&m.src!=='agenda'?`<button class="btn mini" data-ed="${m.cid}">Editar</button>`:''}</span>`).join('');
+const act=ed?`<label class="chk"><input type="checkbox" data-ofg="${esc(e.cid)}"${e.ofg?' checked':''}> OF GENERAL <small>(cartão pisca até o horário)</small></label>`+(ag?'<div class="wr">Este voo vem da agenda. Para alterar ou excluir, faça na agenda.</div>':`<div class="row2"><button class="btn p" data-ed="${e.cid}">Editar movimento</button><button class="btn" data-del="${e.cid}">Excluir movimento</button>${e.fl.length>1?`<button class="btn" data-delf="${e.fid}">Excluir voo inteiro (${e.fl.length})</button>`:''}</div>`):'';
+$('#dlg').innerHTML=`<div class="dh"><h2>Aeronave ${esc(acf(e.ac))} · ${esc(e.sq)}${e.esq?' · '+esc(e.esq):''}</h2><button class="btn" onclick="document.getElementById('dlg').close()">Fechar</button></div><div class="db"><div><h3>Rota completa</h3><div class="row2">${rt}</div></div><div><h3>Missão</h3><b>${esc(e.mission)||'—'}</b></div>${e.emb||e.des?`<div class="row2"><div><h3>Embarque</h3>${esc(e.emb)||'—'}</div><div style="margin-left:24px"><h3>Desembarque</h3>${esc(e.des)||'—'}</div></div>`:''}${e.orgao?`<div><h3>Órgão apoiado</h3>${esc(e.orgao)}</div>`:''}${e.desc?`<div><h3>Dados da agenda</h3><div style="white-space:pre-wrap;font-size:14px">${esc(e.desc)}</div></div>`:''}<div><h3>Decolagem e pouso deste voo (${f.z?'Z':'local'})</h3><div class="it" style="--c:${c}">${it}</div></div>${act}</div>`;
+$('#dlg').showModal()}
+
+document.addEventListener('click',e=>{const t=e.target.closest('[data-sq],[data-ty],[data-z],[data-bt],.cd,.br');if(!t)return;
+if(t.dataset.sq)f.sq=t.dataset.sq;else if(t.dataset.ty)f.ty=t.dataset.ty;else if(t.dataset.z!==undefined)f.z=t.dataset.z==='1';else if(t.dataset.bt)f.bt=t.dataset.bt;else{show(+t.dataset.i);return}
+render(!t.dataset.bt)});
+$('#day').onchange=e=>{f.day=e.target.value;render(true)};
+$('#q').oninput=e=>{f.q=e.target.value;render()};
+$('#mo').onchange=load;$('#now').onclick=goNow;
+$('#dlg').addEventListener('click',e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+document.querySelector('label[for=file]').onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();$('#file').click()}};
+
+$('#file').onchange=e=>readFile(e.target.files[0]);
+addEventListener('dragover',e=>e.preventDefault());
+addEventListener('drop',e=>{e.preventDefault();readFile(e.dataTransfer.files[0])});
+tick();setInterval(tick,15000);
+const LS={g:k=>{try{return JSON.parse(localStorage.getItem(k))}catch(e){return null}},s:(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+HID=!!LS.g('tl_hide');
+let DB=null,SYNC=new Map(),LASTM=null,OB=LS.g('tl_ob')||[];
+let TH=LS.g('tl_theme')||{};TH.g=TH.g||{};TH.o=TH.o||{};
+const SQ=['GTE 1','GTE 2','GTE 3','6 ETA','EXTERNAS'];
+let role='U',who='',auth=LS.g('tl_auth')||{},log=LS.g('tl_log')||[],WB=null,IM={},SR=[],mv=LS.g('tl_mv');
+srcName=LS.g('tl_src')||'Dados de exemplo';
+const RK={U:0,O:1,A:2},RN={U:'Usuário',O:'Operador',A:'Administrador'},can=n=>RK[role]>=RK[n];
+const hs=s=>{let h=5381;for(const c of s)h=(h*33)^c.charCodeAt(0);return String(h>>>0)};
+const msg=t=>{const m=$('#msg');if(m)m.textContent=t},D2=()=>$('#d2'),op=()=>{if(!D2().open)D2().showModal()};
+const lt=u=>{const d=new Date(u+OFF);return p2(d.getUTCDate())+'/'+p2(d.getUTCMonth()+1)+' '+p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())};
+const saveM=()=>{LS.s('tl_mv',mv);cloudPush()},saveS=()=>{LS.s('tl_src',srcName);cfgPush()};
+const lg=(a,d)=>{const e={t:Date.now(),w:(who?who+' · ':'')+RN[role],a,d};if(sbCfg())ob({k:'log',e});log.unshift(e);log=log.slice(0,sbCfg()?300:500);LS.s('tl_log',log)};
+const dm=m=>`${m.ty==='DEP'?'Decolagem':'Pouso'} ${m.ac} ${m.from}›${m.to} ${lt(m.utc)}`;
+const LB={ty:'Tipo',ac:'Aeronave',sq:'Esquadrão',from:'Origem',to:'Destino',utc:'Data/hora',mission:'Missão',des:'Desembarque',ofg:'OF GENERAL'};
+const fv=(k,v)=>k==='utc'?lt(v):k==='ofg'?(v?'Sim':'Não'):k==='ty'?(v==='DEP'?'Decolagem':'Pouso'):(v||'—');
+const hyd=a=>{const h=a.map(m=>({...m,cid:m.id,sq:nsq(m.sq)})),g={};h.forEach(m=>(g[m.fid]=g[m.fid]||[]).push(m));Object.values(g).forEach(l=>l.sort((x,y)=>x.utc-y.utc));h.forEach(m=>m.fl=g[m.fid]);return h};
+function ex(){const n=Date.now(),H=36e5,mk=(ac,sq,rt,ts,ms,des)=>{const fid='e'+ac,B={fid,ac,sq,mission:ms,des,emb:'',orgao:'',pax:'',route:rt,src:'exemplo'},o=rt.slice(0,-1).map((c,i)=>({...B,id:fid+'d'+i,ty:'DEP',from:c,to:rt[i+1],utc:Math.round((n+ts[i]*H)/6e4)*6e4}));o.push({...B,id:fid+'a',ty:'ARR',from:rt[rt.length-2],to:rt[rt.length-1],utc:Math.round((n+ts[ts.length-1]*H)/6e4)*6e4});return o};
+return[...mk('2590','GTE 1',['BR','LPPT','BR'],[2,14,26],'PR ESCAV','EST AUT'),...mk('2019','6 ETA',['BR','MG','BR'],[1,5,7],'TOTEQ','P. ETA')]}
+if(!mv){mv=sbCfg()?[]:ex();saveM()}
+function applyRole(){$('#brole').textContent='Acesso: '+RN[role]+' ▾';$('#fab').hidden=!can('O');$('#lfile').hidden=!can('A');$('#bhist').hidden=!can('A');$('#bthm').hidden=!can('A');$('#bsyn').hidden=!can('A');$('#busr').hidden=!(can('A')&&!!sbCfg());if(!can('A'))$('#d4').close()}
+const adm=()=>`${sbCfg()?'':'<h3>PIN do operador</h3><div class="row2"><input id="po" type="password" inputmode="numeric" placeholder="Novo PIN"><button class="btn" data-sp="O">Salvar</button></div><h3>PIN do administrador</h3><div class="row2"><input id="pa" type="password" inputmode="numeric" placeholder="Novo PIN"><button class="btn" data-sp="A">Salvar</button></div>'}<h3>Backup (copie o texto; cole aqui para restaurar)</h3><textarea id="bk" rows="3"></textarea><div class="row2"><button class="btn" data-bk="g">Gerar backup</button><button class="btn" data-bk="r">Restaurar</button><button class="btn" data-cl>Apagar todos os voos</button></div>`;
+let psel='U';
+function roleD(){psel=role;D2().innerHTML=`<div class="dh"><h2>Quem está usando?</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div class="row2">${Object.keys(RN).map(r=>`<button class="btn${role===r?' p':''}" data-r="${r}" aria-pressed="${role===r}">${RN[r]}</button>`).join('')}</div><div id="rp"></div><div id="msg" class="wr"></div>${role==='A'?adm():''}</div>`;op()}
+function mark(r){psel=r;document.querySelectorAll('#d2 [data-r]').forEach(b=>{const on=b.dataset.r===r;b.classList.toggle('p',on);b.setAttribute('aria-pressed',on)})}
+const pw=()=>'<label class="chk"><input type="checkbox" id="shp"> Mostrar senha</label>';
+function pick(r){mark(r);msg('');$('#rp').innerHTML='';
+if(r==='U'){role='U';who='';LS.s('tl_sess',null);sbLogout();applyRole();D2().close();return}
+if(sbCfg()){if(SBU&&RK[SBU.max]>=RK[r]){role=r;saveProf();applyRole();D2().close();return}
+$('#rp').innerHTML=`<h3>Entrar como ${RN[r]}</h3><div class="fm"><label>Usuário<input id="lu" autocomplete="username" autocapitalize="none" autocorrect="off"></label><label>Senha<input id="lp" type="password" data-pw autocomplete="current-password"></label></div>${pw()}<button class="btn p" data-ok="${r}">Entrar</button>`;return}
+if(r==='O'&&!auth.O){msg('O administrador precisa criar o PIN do operador primeiro.');return}
+$('#rp').innerHTML=`<h3>${auth[r]?'Seu nome e PIN':'Crie o PIN de administrador (e informe seu nome)'}</h3><div class="row2"><input id="nm" placeholder="Seu nome" autocomplete="off"><input id="pin" type="password" data-pw inputmode="numeric" autocomplete="off" placeholder="PIN"><button class="btn p" data-ok="${r}">Entrar</button></div>${pw()}`}
+function login(r){if(sbCfg())return sbLogin(r);const v=$('#pin').value.trim();if(!v)return;if(!auth[r]&&r==='A'){auth.A=hs(v);LS.s('tl_auth',auth)}else if(auth[r]!==hs(v)){msg('PIN incorreto.');return}who=$('#nm').value.trim().toUpperCase();role=r;LS.s('tl_sess',{r,w:who,h:auth[r]});applyRole();D2().close()}
+function histD(){if(!can('A'))return;const draw=l=>{D2().innerHTML=`<div class="dh"><h2>Histórico de alterações</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div style="color:var(--mu);font-size:13px">Horários de Brasília.${sbCfg()?' Registro compartilhado entre todos os aparelhos.':' O registro fica guardado neste aparelho.'}</div>${l.length?l.map(x=>`<div class="lgi"><b>${lt(x.t)}</b> · ${esc(x.w)}<br><span class="ac">${esc(x.a)}</span> ${esc(x.d)}</div>`).join(''):'<div>Nenhuma alteração registrada ainda.</div>'}</div>`};draw(log);op();
+if(DB&&navigator.onLine)DB.from('historico').select('t,w,a,d').order('t',{ascending:false}).limit(300).then(r=>{if(!r.error&&r.data){log=r.data;LS.s('tl_log',log);if(D2().open)draw(log)}})}
+function formD(id,ty){if(!can('O'))return;const c=mv.find(x=>x.id===id)||{},x=!!id;if(x&&c.src==='agenda'){toast('Este voo vem da agenda: altere lá.');return}if(x)ty=c.ty;
+const e2=[...new Set([...SQ,...sqs])],a=c.utc?(d=>[d.getUTCFullYear()+'-'+p2(d.getUTCMonth()+1)+'-'+p2(d.getUTCDate()),p2(d.getUTCHours())+':'+p2(d.getUTCMinutes())])(new Date(c.utc+OFF)):['',''];
+const I=(k,l,v,t='text')=>`<label>${l}<input id="f_${k}" type="${t}" value="${esc(v||'')}"></label>`;
+const fr=x?c.from:(ty==='DEP'?'SBBR':''),to=x?c.to:(ty==='ARR'?'SBBR':''),w=ty==='DEP'?'decolagem':'pouso',gn=x?mv.filter(m=>m.fid===c.fid).length:0;
+D2().innerHTML=`<div class="dh"><h2>${x?'Editar movimento':(ty==='DEP'?'Decolagem':'Pouso')}</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div class="fm">${x?`<label>Tipo<select id="f_ty"><option value="DEP"${c.ty==='DEP'?' selected':''}>Decolagem</option><option value="ARR"${c.ty==='ARR'?' selected':''}>Pouso</option></select></label>`:''}${I('ac','Aeronave',c.ac)}<label>Esquadrão<select id="f_sq">${e2.map(s=>`<option${s===nsq(c.sq)?' selected':''}>${esc(s)}</option>`).join('')}</select></label>${I('so','Outro esquadrão (se não estiver na lista)','')}${I('from','Origem',fr)}${I('to','Destino',to)}${I('dd',x?'Data':'Data do '+w,a[0],'date')}${I('dt',x?'Hora':'Hora do '+w,a[1],'time')}<label>Horários informados em<select id="f_tz"><option value="L">Local (Brasília)</option><option value="Z">Zulu (Z)</option></select></label>${I('ms','Missão / quem é transportado',c.mission)}${x?I('ds','Desembarque',c.des):''}</div><label class="chk"><input type="checkbox" id="f_of"${c.ofg?' checked':''}> OF GENERAL <small>(o cartão do voo pisca até o horário)</small></label><div id="msg" class="wr"></div><div class="row2"><button class="btn p" data-sv="${id||''}" data-sty="${ty||''}">Salvar</button>${x?`<button class="btn" data-del="${id}">Excluir movimento</button>`:''}${gn>1?`<button class="btn" data-delf="${c.fid}">Excluir voo inteiro (${gn})</button>`:''}</div></div>`;op()}
+function save(id,ty){const g=k=>$('#f_'+k).value.trim(),U=k=>g(k).toUpperCase(),off=$('#f_tz').value==='Z'?0:OFF,T=(d,t)=>d&&t?Date.parse(d+'T'+t+':00Z')-off:null;
+const sq=nsq(U('so')||U('sq')),dep=T(g('dd'),g('dt')),ac=U('ac'),fr=U('from'),to=U('to'),ofg=$('#f_of').checked;
+if(!ac||!sq||!fr||!to||!dep){msg('Preencha aeronave, esquadrão, origem, destino, data e hora.');return}
+const b={ac,sq,from:fr,to,mission:U('ms')};if($('#f_ds'))b.des=U('ds');
+if(id){const i=mv.findIndex(m=>m.id===id),o=mv[i],n={...o,...b,ofg,ty:g('ty')||o.ty,utc:dep},ch=Object.keys(LB).filter(k=>(k==='ofg'?!!o[k]:o[k])!==(k==='ofg'?!!n[k]:n[k])).map(k=>`${LB[k]}: ${fv(k,o[k])} → ${fv(k,n[k])}`);if(!ch.length){D2().close();return}mv[i]=n;mv.forEach(m=>{if(m.fid===o.fid&&m!==n)Object.assign(m,{ac:n.ac,sq:n.sq,mission:n.mission,des:n.des})});lg('Editou',dm(o)+' — '+ch.join('; '))}
+else{const fid='m'+Date.now();mv.push({id:fid+ty,fid,ty,...b,des:'',ofg,utc:dep,emb:'',orgao:'',pax:'',route:[fr,to],src:'manual'});lg(ty==='DEP'?'Incluiu decolagem':'Incluiu pouso',`${ac} ${fr}›${to} ${lt(dep)}${ofg?' (OF GENERAL)':''}`)}
+saveM();load(1);D2().close()}
+const CL=n=>{let s='';for(n++;n>0;n=Math.floor((n-1)/26))s=String.fromCharCode(65+(n-1)%26)+s;return s};
+const FD=[['ac','Aeronave'],['sq','Esquadrão'],['from','Origem'],['to','Destino'],['dd','Data da decolagem'],['dt','Hora da decolagem (Z)'],['at','Hora do pouso (Z)'],['ms','Missão'],['ds','Desembarque']];
+const GU={ac:/aeronave|matr|prefixo/i,sq:/esquadr|unidade/i,from:/origem|embarque/i,to:/destino/i,dd:/data/i,dt:/hora|dep|decol/i,at:/pouso|eta|chegada/i,ms:/miss/i,ds:/desemb/i};
+function impD(){SR=XLSX.utils.sheet_to_json(WB.wb.Sheets[IM.sh],{header:1,raw:true,defval:''});
+if(!IM.hr)IM.hr=Math.max(1,SR.findIndex(r=>r.filter(x=>x!=='').length>=3)+1);
+const H=SR[IM.hr-1]||[],nc=Math.min(26,Math.max(H.length,...SR.slice(0,12).map(r=>r.length)));
+if(!IM.map){IM.map={};const u=new Set();FD.forEach(([k])=>{const j=H.findIndex((h,i)=>!u.has(i)&&GU[k].test(String(h)));if(j>=0){IM.map[k]=j;u.add(j)}})}
+const opt=v=>'<option value="">— não usar —</option>'+Array.from({length:nc},(_,j)=>`<option value="${j}"${v===j?' selected':''}>${CL(j)} — ${esc(String(H[j]||'').slice(0,24))}</option>`).join('');
+D2().innerHTML=`<div class="dh"><h2>Importar planilha</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div style="color:var(--mu);font-size:13px">Arquivo: ${esc(WB.name)}. No Google Planilhas: Arquivo › Fazer download › Microsoft Excel (.xlsx). A importação substitui os voos importados antes; os cadastrados à mão são mantidos.</div><div class="fm"><label>Aba<select id="i_sh">${WB.wb.SheetNames.map(n=>`<option${n===IM.sh?' selected':''}>${esc(n)}</option>`).join('')}</select></label><label>Mês dos voos<input id="i_mo" type="month" value="${IM.mo}"></label><label>Como ler<select id="i_md"><option value="t"${IM.md==='t'?' selected':''}>Modelo do painel (esquadrões)</option><option value="m"${IM.md==='m'?' selected':''}>Escolher as colunas</option></select></label></div>${IM.md==='m'?`<div class="fm"><label>Linha do cabeçalho<input id="i_hr" type="number" min="1" value="${IM.hr}"></label><label>Última linha (opcional)<input id="i_lr" type="number" value="${IM.lr}"></label>${FD.map(([k,l])=>`<label>${l}<select id="i_c_${k}">${opt(IM.map[k])}</select></label>`).join('')}<label>Esquadrão fixo (sem coluna)<input id="i_sqf" value="${esc(IM.sqf||'')}"></label></div>`:''}<h3>Prévia da aba</h3><div class="pv"><table>${SR.slice(0,10).map(r=>'<tr>'+Array.from({length:Math.min(nc,10)},(_,j)=>`<td>${esc(r[j])}</td>`).join('')+'</tr>').join('')}</table></div><div id="msg" class="wr"></div><button class="btn p" data-im>Importar</button></div>`;op()}
+function doImport(){const [y,m]=IM.mo.split('-').map(Number),st=Date.now();let nm=[];
+if(IM.md==='t'){nm=parse(SR,y,m-1).map((e,i)=>({id:'p'+st+'_'+i,fid:'p'+st+'_'+e.fid,ty:e.ty,ac:e.ac,sq:e.sq,from:e.from,to:e.to,utc:e.utc,mission:e.mission,des:e.des,emb:e.emb,orgao:e.orgao,pax:e.pax,route:e.route,src:'planilha'}));if(!nm.length){msg('Nenhum voo reconhecido neste modelo. Tente "Escolher as colunas".');return}}
+else{const M=IM.map,v=(r,k)=>M[k]==null?'':r[M[k]],T=(r,k)=>String(v(r,k)).trim().toUpperCase();
+const pd=x=>{if(typeof x==='number'&&x>31){const d=new Date(Date.UTC(1899,11,30)+Math.round(x)*864e5);return[d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate()]}
+const s=String(x).trim();let a=/^(\d{4})-(\d{2})-(\d{2})/.exec(s);if(a)return[+a[1],a[2]-1,+a[3]];a=/^(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?/.exec(s);if(a)return[a[3]?(+a[3]<100?2000+ +a[3]:+a[3]):y,a[2]-1,+a[1]];return/^\d{1,2}$/.test(s)?[y,m-1,+s]:null};
+const end=+IM.lr||SR.length;
+for(let i=IM.hr;i<end;i++){const r=SR[i];if(!r)continue;const ac=T(r,'ac'),fr=T(r,'from'),to=T(r,'to'),d=pd(v(r,'dd')),t=pt(v(r,'dt'));if(!ac||!fr||!to||!d||t==null)continue;
+const dep=Date.UTC(d[0],d[1],d[2],0,t),ta=pt(v(r,'at'));let arr=ta==null?null:Date.UTC(d[0],d[1],d[2],0,ta);if(arr!=null&&arr<=dep)arr+=864e5;
+const fid='p'+st+'_'+i,B={fid,ac,sq:nsq(T(r,'sq')||IM.sqf||'IMPORTADOS'),from:fr,to,mission:T(r,'ms'),des:T(r,'ds'),emb:'',orgao:'',pax:'',route:[fr,to],src:'planilha'};
+nm.push({...B,id:fid+'D',ty:'DEP',utc:dep});if(arr)nm.push({...B,id:fid+'A',ty:'ARR',utc:arr})}
+if(!nm.length){msg('Nenhum voo reconhecido. Confira a linha do cabeçalho e as colunas de aeronave, origem, destino, data e hora.');return}}
+mv=mv.filter(x=>x.src==='manual').concat(nm);srcName=WB.name;saveM();saveS();lg('Importou planilha',`${WB.name} — ${nm.length} movimentos`);load();D2().close()}
+function readFile(file){if(!file||!can('A'))return;const r=new FileReader();r.onload=()=>{try{const wb=XLSX.read(r.result,{type:'array'});WB={wb,name:file.name};IM={sh:wb.SheetNames[0],md:'t',hr:null,lr:'',map:null,mo:$('#mo').value};impD()}catch(e){toast('Não consegui ler este arquivo. Use uma planilha Excel (.xlsx) ou CSV.')}};r.readAsArrayBuffer(file)}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-x],[data-r],[data-ok],[data-sp],[data-bk],[data-cl],[data-ed],[data-sv],[data-del],[data-delf],[data-im]');if(!t)return;const d=t.dataset;
+if('x' in d)D2().close();else if(d.r)pick(d.r);else if(d.ok)login(d.ok);
+else if(d.sp){const v=$('#p'+d.sp.toLowerCase()).value.trim();if(v){auth[d.sp]=hs(v);LS.s('tl_auth',auth);cfgPush();lg('Alterou PIN','PIN do '+(d.sp==='O'?'operador':'administrador'));msg('PIN salvo.')}}
+else if(d.bk){if(d.bk==='g')$('#bk').value=JSON.stringify({mv,name:srcName,th:TH});else try{const b=JSON.parse($('#bk').value);mv=b.mv||[];srcName=b.name||srcName;if(b.th){TH=b.th;TH.g=TH.g||{};TH.o=TH.o||{};LS.s('tl_theme',TH);thApply()}saveM();saveS();lg('Restaurou backup',mv.length+' movimentos');load();msg('Backup restaurado.')}catch(x){msg('Texto de backup inválido.')}}
+else if('cl' in d){ask('Apagar todos os voos do painel neste aparelho?',()=>{lg('Apagou todos os voos',mv.length+' movimentos');mv=[];srcName='Painel vazio';saveM();saveS();load();D2().close()})}
+else if('ed' in d){$('#dlg').close();formD(d.ed)}else if('sv' in d)save(d.sv,d.sty);
+else if('del' in d){const m=mv.find(x=>x.id===d.del);if(m)ask('Excluir este movimento?',()=>{lg('Excluiu movimento',dm(m));mv=mv.filter(x=>x!==m);saveM();load();D2().close();$('#dlg').close()})}
+else if('delf' in d){const l=mv.filter(x=>x.fid===d.delf);if(l.length)ask('Excluir o voo inteiro ('+l.length+' movimentos)?',()=>{lg('Excluiu voo',`${l[0].ac} — ${l.length} movimentos`);mv=mv.filter(x=>x.fid!==d.delf);saveM();load();D2().close();$('#dlg').close()})}
+else if('im' in d)doImport()});
+D2().addEventListener('change',e=>{const i=e.target.id||'',v=e.target.value;if(!i.startsWith('i_'))return;
+if(i==='i_sh'){IM.sh=v;IM.hr=null;IM.map=null}else if(i==='i_md')IM.md=v;else if(i==='i_mo')IM.mo=v||IM.mo;else if(i==='i_hr'){IM.hr=+v||1;IM.map=null}else if(i==='i_lr')IM.lr=v;else if(i==='i_sqf')IM.sqf=v;else if(i.startsWith('i_c_'))IM.map[i.slice(4)]=v===''?undefined:+v;
+impD()});
+$('#bnew').onclick=()=>formD(null,'DEP');$('#bpso').onclick=()=>formD(null,'ARR');$('#brole').onclick=roleD;$('#bhist').onclick=histD;applyRole();
+
+function ask(t,yes,l){const d=$('#d3');d.innerHTML=`<div class="dh"><h2>Confirmar</h2></div><div class="db"><div>${esc(t)}</div><div class="row2"><button class="btn p" id="cy">${esc(l||'Sim, excluir')}</button><button class="btn" id="cn">Cancelar</button></div></div>`;d.showModal();$('#cy').onclick=()=>{d.close();yes()};$('#cn').onclick=()=>d.close()}
+function toast(t){const e=$('#ts');e.textContent=t;e.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>{e.hidden=true},4500)}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-bd]');if(!b)return;HID=b.dataset.bd==='1';LS.s('tl_hide',HID);board()});
+
+/* ===== Personalização visual (somente administrador) ===== */
+const BS='.btn:not(.p),.chip:not(.on),.seg button:not(.on),.bt,.zm button',A='#ffc83d';
+const IT=[
+{k:'page',n:'Fundo e textos da página',f:[['g1','Fundo (cor inicial)','c','#15304b',':root','--g1:$'],['g2','Fundo (cor final)','c','#1a3a58',':root','--g2:$'],['tx','Texto principal','c','#eef5fb',':root','--tx:$'],['mu','Texto secundário','c','#a8c0d6',':root','--mu:$']]},
+{k:'head',n:'Título',f:[['c','Cor do título','c','#eef5fb','h1','color:$'],['s','Cor do subtítulo','c','#a8c0d6','h1 small','color:$'],['z','Tamanho do título','n',36,'h1','font-size:$',24,64,'px']]},
+{k:'clk',n:'Relógios (Brasília e Zulu)',f:[['bg','Fundo','c','#0d1d2e','.clk div','background:$'],['lb','Cor do rótulo','c','#a8c0d6','.clk small','color:$'],['fc','Cor dos números','c',A,'.clk .fl','color:$'],['fb','Fundo dos números','c','#13263a','.clk .fl','background:$'],['z','Tamanho dos números','n',22,'.clk .fls','font-size:$',14,44,'px']]},
+{k:'btn',n:'Botões e filtros',f:[['bg','Fundo','c','#2b4a68',BS,'background:$'],['tx','Texto','c','#eef5fb',BS,'color:$'],['bd','Borda','c','#3d688f',BS,'border-color:$'],['on','Botão ativo / principal','c',A,'.btn.p,.seg button.on','background:$;border-color:$'],['h','Altura dos botões','n',42,'.btn,.chip,.seg button','min-height:$',30,64,'px']]},
+{k:'acc',n:'Cor de destaque (seleção, "Próximo", foco)',f:[['am','Cor de destaque','c',A,':root','--am:$']]},
+{k:'sqc',n:'Cores dos esquadrões',f:[]},
+{k:'inp',n:'Busca, dia e campos de texto',f:[['bg','Fundo','c','#0f2539','input:not([type=color]):not([type=range]),select,textarea','background:$'],['tx','Texto','c','#eef5fb','input:not([type=color]):not([type=range]),select,textarea','color:$'],['bd','Borda','c','#3d688f','input:not([type=color]):not([type=range]),select,textarea','border-color:$']]},
+{k:'board',n:'Quadro de partidas e chegadas',f:[['bg','Fundo do quadro','c','#0d1d2e','.board','background:$'],['rw','Fundo das linhas','c','#14293f','.br','background:$'],['tx','Texto das linhas','c','#eef5fb','.br','color:$'],['fc','Cor dos números','c',A,'.board .fl','color:$'],['st','Cor da contagem ("em 20 min")','c',A,'.bs','color:$'],['z','Tamanho dos números','n',20,'.br .fls','font-size:$',14,36,'px'],['p','Altura das linhas','n',4,'.br','padding-top:$;padding-bottom:$',2,16,'px']]},
+{k:'card',n:'Cartões da linha do tempo',f:[['bg','Fundo do cartão','c','#244a6d','.cd','background:$'],['hd','Fundo do topo (horário)','c','#0d1d2e','.ch','background:$'],['tx','Texto','c','#eef5fb','.cd','color:$'],['mu','Texto da missão','c','#a8c0d6','.ms','color:$'],['fc','Cor do horário','c',A,'.cd .fl','color:$'],['bd','Borda','c','#3d688f','.cd','border-right-color:$;border-bottom-color:$;border-left-color:$'],['hl','Destaque do "próximo"','c',A,'.nd.now .cd','box-shadow:0 0 0 3px $,0 6px 16px rgba(0,0,0,.38)'],['nx','Etiqueta PRÓXIMO','c',A,'.nx','background:$'],['r','Arredondamento','n',14,'.cd',v=>`border-radius:${Math.round(v/2.3)}px ${Math.round(v/2.3)}px ${v}px ${v}px`,0,28,'px'],['w','Largura do cartão','n',196,'.nd','width:$',150,340,'px'],['rs','Tamanho da rota (BR › LPPT)','n',27,'.rt','font-size:$',16,44,'px'],['sz','Tamanho do texto da missão','n',13,'.ms','font-size:$',10,20,'px']]},
+{k:'mk',n:'Ícone do avião (marcador)',f:[['sz','Tamanho','n',96,'.mk',(v,pf)=>{const h=Math.round(v*.583),h2=h/2;return `${pf('.mk')}{width:${v}px;height:${h}px;margin:${-h2}px 0 0 ${-v/2}px}${pf('.up .cd')}{bottom:calc(50% + ${h2+6}px)}${pf('.dn .cd')}{top:calc(50% + ${h2+6}px)}${pf('.st')}{height:${h2+8}px}`},56,160,'px'],['ic','Cor do avião','c','#ffffff','.mk','color:$'],['bd','Cor da borda','c','#16314c','.mk','border-color:$']]},
+{k:'rail',n:'Pista e fundo da linha do tempo',f:[['tr','Faixa tracejada','c','#cfe0ee','.rail',(v,pf,a)=>`background:repeating-linear-gradient(90deg,${a.tr} 0 18px,transparent 18px 38px) 0 50%/100% 2px no-repeat,linear-gradient(${a.as},${a.as}) 0 50%/100% 12px no-repeat`],['as','Asfalto','c','#0e2133','.rail',(v,pf,a)=>`background:repeating-linear-gradient(90deg,${a.tr} 0 18px,transparent 18px 38px) 0 50%/100% 2px no-repeat,linear-gradient(${a.as},${a.as}) 0 50%/100% 12px no-repeat`],['bg','Fundo da área','c','#0a1826','.tl','background:$'],['h','Altura da área','n',470,'.tl',(v,pf)=>`${pf('.tl')}{height:calc(${v}px*var(--z,1))}${pf('.rail')}{height:${v}px}`,300,900,'px']]},
+{k:'day',n:'Rótulos de dia (ex.: TER 17/11)',f:[['bg','Fundo','c',A,'.dd span','background:$'],['tx','Texto','c','#1a1300','.dd span','color:$'],['ln','Linha tracejada','c','#3d688f','.dd:before','border-left-color:$'],['z','Tamanho','n',17,'.dd span','font-size:$',12,30,'px']]},
+{k:'dlg',n:'Janelas (roteiro e edição)',f:[['bg','Fundo','c','#244a6d','dialog:not(#d4)','background:$'],['tx','Texto','c','#eef5fb','dialog:not(#d4)','color:$'],['bd','Linha do cabeçalho','c','#3d688f','dialog:not(#d4) .dh','border-bottom-color:$'],['r','Arredondamento','n',16,'dialog:not(#d4)','border-radius:$',0,32,'px']]}
+];
+const GF=[['g1','Fundo da página (início)','c','#15304b'],['g2','Fundo da página (fim)','c','#1a3a58'],['sf','Janelas e cartões','c','#244a6d'],['pn','Painéis escuros (relógios, quadro, topo do cartão)','c','#0d1d2e'],['rw','Linhas do quadro','c','#14293f'],['in','Campos de texto','c','#0f2539'],['bd','Bordas','c','#3d688f'],['tx','Texto principal','c','#eef5fb'],['mu','Texto secundário','c','#a8c0d6'],['am','Destaque (seleção, "Próximo")','c',A],['rb','Arredondamento de botões e campos','n',10,'','',0,24,'px']];
+const PRE={'Azul (padrão)':{},'Grafite':{g1:'#1b1b1f',g2:'#2a2a30',sf:'#34343c',pn:'#0f0f12',rw:'#1c1c21',in:'#141418',bd:'#5a5a66',tx:'#f1f1f4',mu:'#b3b3c0',am:'#ffb020'},'Verde militar':{g1:'#16241a',g2:'#22362a',sf:'#2f4a38',pn:'#0d1a11',rw:'#15281c',in:'#0f1f15',bd:'#56805f',tx:'#eef6ee',mu:'#afc8b3',am:'#d9e04a'},'Alto contraste':{g1:'#000000',g2:'#0a0a0a',sf:'#141414',pn:'#000000',rw:'#101010',in:'#000000',bd:'#ffffff',tx:'#ffffff',mu:'#e0e0e0',am:'#ffe600'},'Vinho':{g1:'#2a1020',g2:'#431a33',sf:'#5a2646',pn:'#1a0a14',rw:'#2b1222',in:'#220e1b',bd:'#9a5a80',tx:'#fbeef5',mu:'#d3aec4',am:'#ffc83d'}};
+const pf=s=>s.split(',').map(x=>x.trim()).reduce((r,x)=>{if(r.d>0||/\(/.test(x)&&!/\)/.test(x)){r.d+=(x.match(/\(/g)||[]).length-(x.match(/\)/g)||[]).length;r.o[r.o.length-1]+=','+x}else{r.d+=(x.match(/\(/g)||[]).length-(x.match(/\)/g)||[]).length;r.o.push(x)}return r},{d:0,o:[]}).o.map(x=>/^(:root|body|html)/.test(x)?x:'html '+x).join(',');
+const okv=(x,v)=>x[2]==='c'?(/^#[0-9a-f]{6}$/i.test(v)?v:null):(isFinite(+v)?+v:null);
+function thCss(){let c=':root{'+GF.filter(x=>TH.g[x[0]]!==undefined&&okv(x,TH.g[x[0]])!==null).map(x=>x[0]==='rb'?`--rb:${+TH.g.rb}px`:`--${x[0]}:${TH.g[x[0]]}`).join(';')+'}';
+IT.forEach(it=>{const o=TH.o[it.k]||{},a={};it.f.forEach(x=>a[x[0]]=o[x[0]]!==undefined&&okv(x,o[x[0]])!==null?o[x[0]]:x[3]);
+it.f.forEach(x=>{if(o[x[0]]===undefined||okv(x,o[x[0]])===null)return;const v=o[x[0]],d=typeof x[5]==='function'?x[5](v,pf,a):x[5].split('$').join(v+(x[8]||''));c+=d.includes('{')?d:pf(x[4])+'{'+d+'}'})});return c}
+function thApply(){let s=document.getElementById('thm');if(!s){s=document.createElement('style');s.id='thm';document.head.appendChild(s)}s.textContent=thCss();const m=document.querySelector('meta[name=theme-color]');if(m)m.content=TH.g.g1||'#16314c'}
+function thSave(rr){LS.s('tl_theme',TH);cfgPush();thApply();if(rr){clearTimeout(thSave.h);thSave.h=setTimeout(render,120)}}
+const D4=()=>$('#d4'),sqF=()=>sqs.map((s,i)=>[s,s,'c',PAL[i%PAL.length]]),thHas=k=>TH.o[k]&&Object.keys(TH.o[k]).length;
+let thMode='G',thItem='head';
+function thField(sc,x){const o=sc==='G'?TH.g:(TH.o[sc]||{}),ov=o[x[0]]!==undefined,v=ov?o[x[0]]:x[3],a=`data-sc="${esc(sc)}" data-fk="${esc(x[0])}"`;
+return `<label class="thf"><span>${esc(x[1])}</span>${x[2]==='c'?`<input type="color" ${a} value="${esc(v)}">`:`<input type="range" ${a} data-u="${x[8]||''}" min="${x[6]}" max="${x[7]}" value="${v}">`}<output>${esc(x[2]==='c'?v:v+(x[8]||''))}</output><button type="button" class="btn rs" data-trs="${esc(sc)}|${esc(x[0])}" ${ov?'':'disabled'} title="Voltar ao padrão" aria-label="Voltar ao padrão">↺</button></label>`}
+function thD(){const d=D4(),old=d.querySelector('.db'),st=old?old.scrollTop:0,fl=(sc,a)=>a.map(x=>thField(sc,x)).join('');let b;
+if(thMode==='G')b=`<div style="color:var(--mu);font-size:13px">Vale para <b>todos os itens</b> de uma vez. Itens que tiverem ajuste individual (modo "Um item por vez") mantêm a própria cor.</div><h3>Temas prontos</h3><div class="row2">${Object.keys(PRE).map(n=>`<button class="btn" data-pre="${esc(n)}">${esc(n)}</button>`).join('')}</div><h3>Cores</h3>${fl('G',GF.filter(x=>x[2]==='c'))}<h3>Layout</h3>${fl('G',GF.filter(x=>x[2]==='n'))}<h3>Cores dos esquadrões</h3>${fl('sqc',sqF())}<div class="row2"><button class="btn" data-th="clearo">Remover ajustes individuais</button><button class="btn" data-th="reset">Restaurar tudo ao padrão</button></div>`;
+else{const it=IT.find(i=>i.k===thItem)||IT[0];b=`<label class="ths">Item do painel (• = tem ajuste)<select id="th_it">${IT.map(i=>`<option value="${i.k}"${i.k===it.k?' selected':''}>${esc(i.n)}${thHas(i.k)?' •':''}</option>`).join('')}</select></label>${fl(it.k,it.k==='sqc'?sqF():it.f)}<div class="row2"><button class="btn" data-th="rit">Restaurar este item</button></div>`}
+d.innerHTML=`<div class="dh"><h2>Personalizar painel</h2><button class="btn" data-th="x">Fechar</button></div><div class="db"><div class="seg"><button data-thm="G" class="${thMode==='G'?'on':''}">Todos de uma vez</button><button data-thm="I" class="${thMode==='I'?'on':''}">Um item por vez</button></div>${b}</div>`;d.querySelector('.db').scrollTop=st}
+D4().addEventListener('input',e=>{const t=e.target,sc=t.dataset.sc;if(sc==null||!can('A'))return;const k=t.dataset.fk,v=t.type==='range'?+t.value:t.value;
+(sc==='G'?TH.g:(TH.o[sc]=TH.o[sc]||{}))[k]=v;t.parentNode.querySelector('output').textContent=t.type==='range'?v+(t.dataset.u||''):v;t.parentNode.querySelector('.rs').disabled=false;thSave(sc==='sqc')});
+D4().addEventListener('change',e=>{if(e.target.id==='th_it'){thItem=e.target.value;thD()}});
+D4().addEventListener('click',e=>{const t=e.target.closest('button');if(!t||!can('A'))return;const d=t.dataset;
+if(d.thm){thMode=d.thm;thD()}
+else if(d.pre){const rb=TH.g.rb;TH.g={...PRE[d.pre]};if(rb!==undefined)TH.g.rb=rb;TH.o={};lg('Mudou o layout','Tema: '+d.pre);thSave(true);thD()}
+else if(d.trs){const i=d.trs.indexOf('|'),sc=d.trs.slice(0,i),k=d.trs.slice(i+1),o=sc==='G'?TH.g:TH.o[sc];if(o){delete o[k];if(sc!=='G'&&!Object.keys(o).length)delete TH.o[sc]}thSave(sc==='sqc');thD()}
+else if(d.th==='x')D4().close();
+else if(d.th==='clearo'){TH.o={};lg('Mudou o layout','Removeu ajustes individuais');thSave(true);thD()}
+else if(d.th==='rit'){delete TH.o[thItem];lg('Mudou o layout','Restaurou item: '+thItem);thSave(true);thD()}
+else if(d.th==='reset')ask('Restaurar todas as cores e o layout ao padrão?',()=>{TH={g:{},o:{}};lg('Mudou o layout','Restaurou o padrão');thSave(true);thD()},'Sim, restaurar')});
+$('#bthm').onclick=()=>{if(!can('A'))return;D4().show();thD()};
+thApply();
+
+
+/* ===== Supabase: tempo real, fila offline, login e usuários ===== */
+const SBJS='https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js',DOM='@painel.interno';
+let SBU=null,live=0,manualOut=0,fp=1,rtm,flushing=0;
+function sbCfg(){return SB_URL&&SB_KEY?{url:SB_URL,key:SB_KEY}:LS.g('tl_sb')}
+const ldS=u=>new Promise((ok,no)=>{const e=document.createElement('script');e.src=u;e.onload=ok;e.onerror=no;document.head.appendChild(e)});
+function stTxt(){if(!sbCfg())return['Somente neste aparelho','lo'];if(!navigator.onLine)return[OB.length?'Offline · '+OB.length+' alteração(ões) a enviar':'Offline','of'];if(!DB)return['Conectando…','pe'];if(OB.length)return['Enviando…','pe'];if(!live)return['Reconectando…','pe'];return['Sincronizado','ok']}
+function setSt(){const e=$('#sy');if(!e)return;const [t,c]=stTxt();e.textContent=t;e.className='sy '+c;const e2=$('#sy2');if(e2)e2.textContent=t}
+/* fila de envio (guardada no aparelho; sobe quando houver rede e login) */
+const obSave=()=>LS.s('tl_ob',OB);
+function ob(op){if(op.k==='up'||op.k==='del')OB=OB.filter(o=>!((o.k==='up'||o.k==='del')&&o.id===op.id));else if(op.k==='cfg')OB=OB.filter(o=>!(o.k==='cfg'&&o.chave===op.chave));
+OB.push(op);obSave();setSt();clearTimeout(ob.h);ob.h=setTimeout(flush,50)}
+function cloudPush(){if(!sbCfg()||!can('O'))return;const cur=new Map(mv.map(m=>[m.id,m]));
+cur.forEach((m,id)=>{const j=JSON.stringify(m);if(SYNC.get(id)!==j){SYNC.set(id,j);ob({k:'up',id,d:JSON.parse(j)})}});
+[...SYNC.keys()].forEach(id=>{if(!cur.has(id)){SYNC.delete(id);ob({k:'del',id})}})}
+function cfgPush(){if(!sbCfg()||!can('A'))return;clearTimeout(cfgPush.h);cfgPush.h=setTimeout(()=>{ob({k:'cfg',chave:'tema',valor:TH});ob({k:'cfg',chave:'nome',valor:{v:srcName}})},400)}
+async function flush(){if(flushing||!DB||!OB.length||!navigator.onLine)return;flushing=1;setSt();
+try{const {data:{session}}=await DB.auth.getSession();if(!session)return;
+while(OB.length){const o=OB[0];let n=1,r;
+if(o.k==='up'){const g=[];for(const x of OB){if(x.k!=='up'||g.length>=200)break;g.push(x)}n=g.length;r=await DB.from('movimentos').upsert(g.map(x=>({id:x.id,d:x.d,atualizado:new Date().toISOString()})))}
+else if(o.k==='del'){const g=[];for(const x of OB){if(x.k!=='del'||g.length>=200)break;g.push(x.id)}n=g.length;r=await DB.from('movimentos').delete().in('id',g)}
+else if(o.k==='cfg')r=await DB.from('config').upsert({chave:o.chave,valor:o.valor});
+else r=await DB.from('historico').insert({t:o.e.t,w:o.e.w,a:o.e.a,d:o.e.d});
+if(r.error){const st=r.status||0;if(st===401){await DB.auth.refreshSession().catch(()=>{});break}
+if(st>=400&&st<500&&st!==408&&st!==429){toast('Uma alteração foi recusada pelo servidor: '+(r.error.message||st));OB.splice(0,n);continue}break}
+OB.splice(0,n);obSave()}}
+catch(e){}finally{flushing=0;obSave();setSt()}}
+/* leitura */
+function applyCfg(r){if(OB.some(o=>o.k==='cfg'&&o.chave===r.chave))return;
+if(r.chave==='tema'&&r.valor&&JSON.stringify(r.valor)!==JSON.stringify(TH)){TH=r.valor;TH.g=TH.g||{};TH.o=TH.o||{};LS.s('tl_theme',TH);thApply();if(D4().open)thD()}
+if(r.chave==='nome'&&r.valor&&r.valor.v&&r.valor.v!==srcName){srcName=r.valor.v;LS.s('tl_src',srcName);$('#src').textContent=srcName}}
+async function pull(){if(!DB||!navigator.onLine)return;
+try{let rows=[],from=0;for(;;){const r=await DB.from('movimentos').select('id,d').order('id').range(from,from+999);if(r.error)throw r.error;rows=rows.concat(r.data);if(r.data.length<1000)break;from+=1000}
+let arr=rows.map(r=>r.d);OB.forEach(o=>{if(o.k==='up'){const i=arr.findIndex(m=>m.id===o.id);if(i>=0)arr[i]=o.d;else arr.push(o.d)}else if(o.k==='del')arr=arr.filter(m=>m.id!==o.id)});
+mv=arr;SYNC=new Map(mv.map(m=>[m.id,JSON.stringify(m)]));LS.s('tl_mv',mv);
+const c=await DB.from('config').select('chave,valor');if(!c.error)c.data.forEach(applyCfg);
+const f1=fp;fp=0;load(!f1)}catch(e){}}
+function onMv(p){const id=(p.new&&p.new.id)||(p.old&&p.old.id);if(!id||OB.some(o=>o.id===id))return;
+if(p.eventType==='DELETE'){mv=mv.filter(m=>m.id!==id);SYNC.delete(id)}else{const d=p.new.d,i=mv.findIndex(m=>m.id===id);if(i>=0)mv[i]=d;else mv.push(d);SYNC.set(id,JSON.stringify(d))}
+LS.s('tl_mv',mv);clearTimeout(rtm);rtm=setTimeout(()=>load(1),80)}
+function onCfg(p){if(p.new&&p.new.chave){applyCfg(p.new);render()}}
+async function sbInit(){const c=sbCfg();if(!c||DB||sbInit.b)return;sbInit.b=1;
+try{if(!window.supabase)await ldS(SBJS);
+DB=supabase.createClient(c.url,c.key,{auth:{storageKey:'tl_sb_auth',persistSession:true,autoRefreshToken:true}});
+DB.auth.onAuthStateChange((ev,se)=>{if(ev==='SIGNED_OUT'&&!manualOut&&LS.g('tl_prof')){role='U';who='';SBU=null;LS.s('tl_prof',null);applyRole();toast('Sessão encerrada. Entre novamente.')}if(se&&(ev==='SIGNED_IN'||ev==='TOKEN_REFRESHED'))setTimeout(flush,0)});
+DB.channel('painel').on('postgres_changes',{event:'*',schema:'public',table:'movimentos'},onMv).on('postgres_changes',{event:'*',schema:'public',table:'config'},onCfg).subscribe(st=>{live=st==='SUBSCRIBED';setSt();if(live){pull();flush()}});
+setSt();pull();flush()}
+catch(e){sbInit.b=0;DB=null;setSt()}}
+addEventListener('online',()=>{setSt();if(!DB)sbInit();else{flush();pull()}});addEventListener('offline',setSt);
+/* login */
+const saveProf=()=>LS.s('tl_prof',{role,max:SBU.max,nome:who});
+function sbLogout(){if(!sbCfg())return;manualOut=1;LS.s('tl_prof',null);SBU=null;if(DB)DB.auth.signOut({scope:'local'}).catch(()=>{}).finally(()=>{manualOut=0});else manualOut=0}
+async function sbLogin(r){const u=$('#lu').value.trim().toLowerCase(),p=$('#lp').value;if(!u||!p){msg('Informe usuário e senha.');return}
+if(!DB||!navigator.onLine){msg('Sem conexão com o servidor. Entre com internet (depois o acesso fica salvo no aparelho).');return}
+msg('Entrando…');
+const a=await DB.auth.signInWithPassword({email:u+DOM,password:p});if(a.error){msg('Usuário ou senha incorretos.');return}
+const q=await DB.from('profiles').select('nome,role,ativo').eq('id',a.data.user.id).single(),pr=q.data,pk=pr&&{administrador:'A',operador:'O'}[pr.role];
+if(q.error||!pr||!pr.ativo||!pk){await DB.auth.signOut({scope:'local'});msg('Este usuário não tem acesso ao painel.');return}
+if(RK[pk]<RK[r]){await DB.auth.signOut({scope:'local'});msg('Seu perfil é '+RN[pk]+': não permite entrar como '+RN[r]+'.');return}
+role=r;who=(pr.nome||u).toUpperCase();SBU={max:pk,nome:who};saveProf();applyRole();D2().close();flush();pull()}
+/* usuários (somente administrador) */
+async function admCall(b){const r=await DB.functions.invoke('admin-users',{body:b});if(r.error){let m=r.error.message;try{const j=await r.error.context.json();m=j.error||m}catch(e){}throw new Error(m)}return r.data}
+async function usrList(){const el=$('#ul');if(!el)return;if(!DB||!navigator.onLine){el.textContent='É preciso estar online para gerenciar usuários.';return}
+try{const {users}=await admCall({action:'list'});el.innerHTML=users.length?users.map(u=>`<div class="uit" data-id="${esc(u.id)}"><div><b>${esc(u.nome)}</b> · ${esc(u.login)}</div><div class="row2"><select data-f="role"><option value="operador"${u.role==='operador'?' selected':''}>Operador</option><option value="administrador"${u.role==='administrador'?' selected':''}>Administrador</option></select><label class="chk"><input type="checkbox" data-f="ativo"${u.ativo?' checked':''}> Ativo</label><button class="btn mini" data-ua="upd">Salvar perfil</button></div><div class="row2"><input type="password" data-pw data-f="pw" placeholder="Nova senha" autocomplete="new-password"><button class="btn mini" data-ua="pw">Trocar senha</button><button class="btn mini" data-ua="del">Remover</button></div></div>`).join(''):'Nenhum usuário cadastrado.'}catch(e){el.textContent='Erro: '+e.message}}
+function usrD(){D2().innerHTML=`<div class="dh"><h2>Usuários e perfis</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div id="ul">Carregando…</div><h3>Novo usuário</h3><div class="fm"><label>Nome<input id="un" autocomplete="off"></label><label>Usuário (login)<input id="ulg" autocomplete="off" autocapitalize="none" placeholder="ex.: joao.silva"></label><label>Senha (mín. 6)<input id="up" type="password" data-pw autocomplete="new-password"></label><label>Perfil<select id="ur"><option value="operador">Operador</option><option value="administrador">Administrador</option></select></label></div>${pw()}<button class="btn p" data-ua="add">Criar usuário</button><div id="msg" class="wr"></div></div>`;op();usrList()}
+document.addEventListener('click',async e=>{const t=e.target.closest('[data-ua]');if(!t||!can('A'))return;const a=t.dataset.ua,row=t.closest('.uit'),id=row&&row.dataset.id,q=f=>row.querySelector('[data-f='+f+']');
+try{if(a==='add'){const b={action:'create',nome:$('#un').value.trim(),login:$('#ulg').value.trim().toLowerCase(),senha:$('#up').value,role:$('#ur').value};await admCall(b);msg('Usuário criado.');['un','ulg','up'].forEach(k=>$('#'+k).value='');lg('Criou usuário',b.login+' ('+b.role+')');usrList()}
+else if(a==='upd'){const b={action:'update',id,role:q('role').value,ativo:q('ativo').checked};await admCall(b);msg('Perfil atualizado.');lg('Alterou usuário',row.querySelector('b').textContent+' → '+b.role+(b.ativo?'':' (inativo)'));usrList()}
+else if(a==='pw'){const p=q('pw').value;if(p.length<6){msg('A senha precisa ter ao menos 6 caracteres.');return}await admCall({action:'password',id,senha:p});q('pw').value='';msg('Senha alterada.');lg('Trocou senha de',row.querySelector('b').textContent)}
+else if(a==='del')ask('Remover este usuário?',async()=>{try{await admCall({action:'delete',id});lg('Removeu usuário',row.querySelector('b').textContent);usrList()}catch(x){msg(x.message)}},'Sim, remover')}catch(x){msg(x.message)}});
+document.addEventListener('change',e=>{if(e.target.id==='shp')document.querySelectorAll('#d2 [data-pw]').forEach(i=>i.type=e.target.checked?'text':'password')});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&/^(lu|lp|nm|pin)$/.test(e.target.id)){const b=$('#d2 [data-ok]');if(b)b.click()}});
+/* OF GENERAL */
+document.addEventListener('change',e=>{const t=e.target,id=t.dataset&&t.dataset.ofg;if(!id||!can('O'))return;const m=mv.find(x=>x.id===id);if(!m)return;m.ofg=t.checked;lg('OF GENERAL',(t.checked?'Marcou ':'Desmarcou ')+dm(m));saveM();load(1)});
+const blk=()=>{const n=Date.now();document.querySelectorAll('[data-ofg]').forEach(el=>el.classList.toggle('blk',+el.dataset.ofg>n))};
+/* sincronização: painel do administrador */
+function synD(){const st=stTxt();D2().innerHTML=`<div class="dh"><h2>Sincronização</h2><button class="btn" data-x>Fechar</button></div><div class="db"><div>Estado: <b id="sy2">${esc(st[0])}</b></div><div>Alterações aguardando envio: <b>${OB.length}</b></div>${sbCfg()?'':`<div class="wr">Servidor não configurado. Preencha SB_URL e SB_KEY no início do arquivo ou informe abaixo.</div><div class="fm"><label>URL do projeto<input id="sy_u"></label><label>Chave anon<input id="sy_k"></label></div><button class="btn p" data-sy="save">Salvar e conectar</button>`}<div class="row2"><button class="btn" data-sy="now">Sincronizar agora</button></div><div id="msg" class="wr"></div></div>`;op()}
+document.addEventListener('click',e=>{const t=e.target.closest('[data-sy]');if(!t||!can('A'))return;if(t.dataset.sy==='now'){msg('Sincronizando…');flush().then(pull).then(()=>msg('Pronto.'))}
+else{const u=$('#sy_u').value.trim(),k=$('#sy_k').value.trim();if(!/^https:\/\/.+/.test(u)||!k){msg('Informe a URL (https://…) e a chave.');return}LS.s('tl_sb',{url:u,key:k});location.reload()}});
+$('#bsyn').onclick=()=>{if(can('A'))synD()};$('#busr').onclick=()=>{if(can('A')&&sbCfg())usrD()};
+/* sessão salva no aparelho (não sai ao recarregar) */
+(function(){if(sbCfg()){const pr=LS.g('tl_prof');if(pr&&RK[pr.role]!==undefined&&RK[pr.max]!==undefined){role=pr.role;who=pr.nome;SBU={max:pr.max,nome:pr.nome}}}
+else{const se=LS.g('tl_sess');if(se&&auth[se.r]&&auth[se.r]===se.h){role=se.r;who=se.w}}applyRole()})();
+if(sbCfg())SYNC=new Map(mv.map(m=>[m.id,JSON.stringify(m)]));
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
+setSt();sbInit();setInterval(()=>{if(OB.length)flush()},20000);setInterval(blk,3000);
+
+load();
+</script>
+</body></html>
